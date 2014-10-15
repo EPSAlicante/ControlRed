@@ -1,0 +1,25 @@
+<?php
+	switch ($IdiomaEPS)
+	{
+		// Valencià
+		case "val":
+			$zTituloPrincipal = "ERROR EN L'APLICACIÓ";
+			$zCabecera = "$Path_htdocs/../cgi-bin/includes/cabecerav.inc";
+			$zPie = "$Path_htdocs/../cgi-bin/includes/piev.inc";
+			$zDetalle = "Detall de l'error";
+			$zVolver = "Tornar";
+			$zInicio = "Inici";
+		break;
+		// Castellano por omisión
+		default:
+			$zTituloPrincipal = "ERROR EN LA APLICACIÓN";
+			$zCabecera = "$Path_htdocs/../cgi-bin/includes/cabecera.inc";
+			$zPie = "$Path_htdocs/../cgi-bin/includes/pie.inc";
+			$zDetalle = "Detalle del error";
+			$zVolver = "(V)olver";
+			$zAltVolver = "Volver a la pantalla anterior";
+			$zInicio = "(I)nicio";
+			$zAltInicio = "Ir al inicio del proceso";			
+		break;
+	}
+?>

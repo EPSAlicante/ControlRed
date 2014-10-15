@@ -1,0 +1,118 @@
+<?PHP
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: includes 
+ Fichero.....: aviso.phtml
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+include_once("../includes/pasovariables.inc");
+registra('GET');
+registra('ENV');
+registra('SERVER');
+registra('POST');
+registra('COOKIE');
+registra('SESSION');
+$DOCUMENT_ROOT=$SCRIPT_FILENAME;
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html>
+<?php 
+   //Fecha de actualización del documento 
+   $vFechaSys="23/07/2001" ; 
+   //Cargar variables globales
+   include("../includes/globales.inc");
+   include("../includes/estilo.inc");
+   //Librerías a utilizar
+   include_once("../includes/fun_general.inc");
+	//Idioma
+	include("../includes/aviso.rc");
+?>
+<head>
+   <?php include("../includes/meta.inc"); ?>
+   <title><?php echo $zTituloPrincipal ?></title>
+</head>
+
+<?php
+   //body
+   include("../includes/body.inc");
+   //Cabecera
+   ?>
+	<?php include("../includes/cabeceraaccesible.inc")?>
+
+<script language = "Javascript">
+	function fDestino(boton)
+	{
+	 if (boton.name == "Volver") {
+		document.formulario.action="<?php echo $origen ?>";
+	 }
+	 else {
+		 if (boton.name == "Seguir") {
+	 	 	document.formulario.action="<?php echo $destino ?>";
+		 }
+		 else {
+		 	  if (boton.name == "Inicio") {
+			  	 document.formulario.action="<?php echo $inicio ?>";
+			  }
+		 }
+	 }
+	}
+</script>
+
+<div align="center">
+<FORM METHOD="POST" name="formulario" action="../includes/aviso.phtml" align="center">  
+<?php 
+/*echo "httppost $HTTP_POST_VARS<br>"; 
+echo "httpget $HTTP_GET_VARS<br>";
+echo "key $key val $val<br>";
+$l =  phpinfo();
+
+echo "l $l<br>";
+*/ 
+while ($HTTP_POST_VARS && list($key, $val) = each($HTTP_POST_VARS) ) { 
+?><input type="hidden" name="<?php echo $key ?>" value="<?php echo $val ?>">
+<?php } ?>
+<?php while ($HTTP_GET_VARS && list($key, $val) = each($HTTP_GET_VARS) ) { ?>
+<input type="hidden" name="<?php echo $key ?>" value="<?php echo $val ?>">
+<?php } ?>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" COLS="1" WIDTH="580"><tr><td>
+
+	  <table BORDER="0" CELLSPACING="0" CELLPADDING="1" COLS="1" WIDTH="580">
+        <tr>
+          <td BGCOLOR="<?php echo $eCFondoT1?>"><?php echo $eIT1?><?php echo $zTituloPrincipal ?><?php echo $eFT1?></td>
+        </tr>
+      </table>
+	  <br>
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="1" COLS="1" WIDTH="580" BGCOLOR="<?php echo $eCFondoT2?>">
+        <tr>
+          <td width="150" ><?php echo $eIT2?><?php echo $zDetalle ?><?php echo $eFT2?></td>
+        </tr>
+      </table>
+	  
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="10" COLS="1" WIDTH="580" BGCOLOR="<?php echo $eCFondoN?>">
+	  <tr><td height="66" align = "center"><?php echo $eIT2; echo $msg_aviso; $eFT2; ?> </td></tr>
+      </table>
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="10" COLS="1" WIDTH="580" >
+		
+	  <tr>
+	  <?php if ($cVolver!='N') { ?>
+	  <td height="66" width="50%" align="center"><input type="submit" value="<?php echo $zVolver ?>" name="Volver" tabindex="1" onClick="fDestino(document.formulario.Volver)"></td>
+	  <?php } ?>
+	  <?php if ($cInicio!='N') { ?>
+	  <td height="66" width="50%" align="center"><input type="submit" value="<?php echo $zInicio ?>" name="Inicio" tabindex="2" onClick="fDestino(document.formulario.Inicio)"></td>
+	  <?php } ?>
+	  </tr></table>
+</td></tr></table>
+</FORM>
+
+</div>
+
+	<?php include ("../includes/pieaccesible.inc")?>
+</body>
+</html>

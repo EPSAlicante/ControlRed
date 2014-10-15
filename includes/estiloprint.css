@@ -1,0 +1,24 @@
+BODY {
+margin-left:0%;
+margin-right:0%;
+}
+
+DIV.general {
+width : 100%;
+}
+
+#pagina {
+width: 100%;
+}
+#menu {
+width : 25%;
+} 
+
+#reloj {
+width:50%;
+} 
+#logotipos {
+
+width:25%;
+} 
+

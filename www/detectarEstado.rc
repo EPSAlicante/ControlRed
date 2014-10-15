@@ -1,0 +1,17 @@
+﻿<?php
+	switch ($IdiomaEPS)
+	{
+		// Ingles
+		case "ing":
+		// Valencia
+		case "val":
+		// Castellano
+		default:
+			$zTituloPag = "Control de Red";
+			$zAplicacion = "Control de Red la las aulas de la <acronym title='Escuela Politécnica Superior'>EPS</acronym>";
+			$zDetectando = "Detectando la configuración del laboratorio";
+			$zCargando="Se esta detectando la configuración del aula, esta operación puede tardar unos minutos...";
+		
+		break;
+	}
+?>

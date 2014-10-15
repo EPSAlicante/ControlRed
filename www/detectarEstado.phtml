@@ -1,0 +1,83 @@
+<?php
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red 
+ Directorio..: proyectos/alta
+ Fichero.....: detectarEstado.phtml 
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+header('Content-Type: text/html; charset=UTF-8');
+
+//Fecha de actualización del documento
+$vFechaSys = date("d/m/Y",getlastmod());
+
+// Funciones y librerías
+include(G_GLOBALES);	    // Variables globales
+include(G_CONEXIONDB);	    // Conexión a la base de datos
+
+mysql_query("SET NAMES utf8");
+
+// Idioma 
+include(G_DICCIONARIO);	    // Carga el diccionario de la EPS en el array $aDic
+
+include('detectarEstado.rc');
+
+
+
+
+// Función para obtener el grupo del usuario
+function GrupoUsuarioMio($Codigo) {
+   $sql = "select GRUPOSWEB.CODGRU from USUARIOSWEB, GRUPOSWEB where UPPER(USUARIOSWEB.CODUSU)='".strtoupper($Codigo)."' and USUARIOSWEB.GIDNUMBER = GRUPOSWEB.GIDNUMBER  ";
+   $rescont = mysql_query($sql);
+   $datoscont = mysql_fetch_array($rescont);
+   $codgru = $datoscont["CODGRU"];
+   return $codgru;
+}
+
+// Doctype
+echo $g_docTypeStrict;
+?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <title><?php echo $aDic['eps']." - ".$zTituloPag; ?></title>
+    <link rev="stylesheet" href="/estilo.css" type="text/css" rel="stylesheet" />
+    <link rev="stylesheet" href="/estiloprint.css" type="text/css" rel="stylesheet" media="print" />
+    <link rev="stylesheet" href="../../radio.css" type="text/css" rel="stylesheet" />
+	
+
+
+</head>
+
+<body>
+<div class="general">
+
+    	<h1 class="tituloPrincipal">
+        	<?php echo $zAplicacion;?>
+        </h1>
+
+        <h4 class="tituloCuarto">
+        	<?php echo $zDetectando; ?>
+        </h4>
+		
+		<div class="texto">
+		<p><?php echo $zCargando; ?></p>
+		<br />
+		  <div align="center">
+			<img src="imagenes/barraProgreso.gif" alt="Cargando..." />
+		  </div>
+		</div>
+		<script>
+			location.href="controlred.phtml";
+		</script>
+
+     <?php include (G_PIE)?>
+
+</div>
+</body>
+</html>

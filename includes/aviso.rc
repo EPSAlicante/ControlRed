@@ -1,0 +1,23 @@
+<?php
+	switch ($IdiomaEPS)
+	{
+		// Valencià
+		case "val":
+			$zTituloPrincipal = "AVÍS";
+			$zCabecera = "$Path_htdocs/../cgi-bin/includes/cabecerav.inc";
+			$zPie = "$Path_htdocs/../cgi-bin/includes/piev.inc";
+			$zDetalle = "Detall de l'avís";
+			$zVolver = "Tornar";
+			$zInicio = "Inici";
+		break;
+		// Castellano por omisión
+		default:
+			$zTituloPrincipal = "AVISO";
+			$zCabecera = "$Path_htdocs/../cgi-bin/includes/cabecera.inc";
+			$zPie = "$Path_htdocs/../cgi-bin/includes/pie.inc";
+			$zDetalle = "Detalle del aviso";
+			$zVolver = "Volver";
+			$zInicio = "Inicio";
+		break;
+	}
+?>

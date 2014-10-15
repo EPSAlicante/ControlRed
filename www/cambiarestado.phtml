@@ -1,0 +1,328 @@
+<?PHP
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: www
+ Fichero.....: cambiarestado.phtml
+ Codificaci髇: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripci髇.: Estado aplicaci髇
+*/
+
+$DOCUMENT_ROOT=$_SERVER["SCRIPT_FILENAME"];
+session_start();
+//$REMOTE_USER=$_SERVER["REMOTE_USER"];
+//$REMOTE_ADDR="172.20.40.38";
+//$REMOTE_USER="admin";
+
+
+?>
+ <?php
+	   //Cargar variables globales
+	   include("../includes/globales.inc");
+        include_once("../includes/funcionesControlRed.inc");
+        $vFechaSys = date("d/m/Y", getlastmod());
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang=<?php echo obtenerlang($IdiomaEPS)?>>
+<head>
+<?php include("../includes/meta.inc"); ?>
+
+<?php $zTitle="Control de Red";?>
+<title><?php echo $zTitle?></title>
+<LINK rev=stylesheet href="../includes/estilo.css" type=text/css rel=stylesheet>
+<LINK rev=stylesheet href="../includes/estiloprint.css" type=text/css rel=stylesheet media="print">
+<?php include("../includes/scripts.inc");?>
+<style type="text/css">
+#flotante
+{
+	position: relative;
+	font-family: Arial;
+	font-size: 1em;
+	font-style: italic;
+	padding: 2%;	
+}
+</style>
+</head>
+<body>
+<script type="text/javascript">
+
+</script>
+<div class="general" >
+	<div style="background-color:#ffffff">
+	<div class="textoBlanco" style="height:70px">
+
+		<span style="float:left">
+			<a href="http://www.eps.ua.es/index.phtml"  title="./imagenes/tituloPrincipal_ESreloj.gif"><img class="left" style="border: 0 none " src="./imagenes/tituloPrincipal_ESreloj.gif" alt="P谩gina Principal EPSA" title="P谩gina Principal EPSA" /></a><br /><br /><br />
+					</span>
+		<a href="http://www.ua.es" title="Web de la UA"><img class="right" style="float:right;border:0 none" src="./imagenes/logouap.gif" alt="Web de la UA" title="Web de la UA" /></a>
+	</div>
+	
+	</div>
+<h1 class="tituloPrincipal">Control de red</h1> 
+<div class="texto">
+	<p> Ya se ha aplicado la restricci贸n, se estan realizando tareas de comprobaci贸n, en unos segundos volvera automaticamente a la p谩gina de control </p>
+	<p> Para cambiar la restricci贸n pulse sobre el bot贸n que desee para aplicar la nueva restricci贸n</p>
+</div>
+
+</div>
+<div id="flotante" align="center">
+	<img  align="center" alt="BarraProgreso" src="./imagenes/barraProgreso.gif" title="Barra Progreso">
+</div>
+<?php $router=$_REQUEST['router'];
+
+   //Conexisn a la BD
+   $db=mysql_connect($gIP, $gUser, $gPassword);
+   if ($db)
+      $res=mysql_select_db($gBaseDatos,$db);
+   if (!$db || !$res)
+      if (!$db)
+         echo "<div class=general><p>ERROR: $php_errormsg</p></div>";
+      else
+         echo "<div class=general><p><big>ERROR: Base de Datos $gBaseDatos inexistente</p></div>";
+   else {
+
+	//echo "<p>".$_REQUEST['aclnombre'];
+	//echo "<p>".$_REQUEST[''];
+	
+if(!empty($_REQUEST['aclnombre'])){
+
+	$router=$_REQUEST['router'];
+	
+	$error=false;
+    if($_REQUEST['aclnombre']=="Reset"){
+    	
+    	
+		                               
+    }else{//No es reset, hay que cambiopcion
+    	$descripcion=$_REQUEST['nombre'];
+    	
+   		$a=snmpwalkoid($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."7");
+		for(reset($a);$i=key($a);next($a)){
+        	//si devuelve true es que la encuentra,
+            if(strstr($a[$i],$_REQUEST['aclnombre'])){
+	        	// XXX $oidTerceraParte=substr($i,42);
+	        	$oidTerceraParte=implode('.', array_slice(explode('.', $i), -6,6));
+				$aclservice=true;
+			}
+       	}
+    	
+    	
+    	if(!empty($_REQUEST['nombre'])){
+    		//echo "<p>Se va a aplicar la restricci髇 del profesor.";
+			//echo "<p>Se va a aplicar la restricci髇 ".$_REQUEST['nombre'];
+    		$error=false;
+			$aclservice=false;
+			$cambiado=false;
+
+			$_SESSION['cambio']="cambiado";
+			$laboratorio=$_REQUEST['codlaboratorio'];
+
+       		if(!empty($_REQUEST['nombre'])){
+				$b=snmpwalkoid($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4");
+				$k=0;
+				for(reset($b);$i=key($b);next($b)){
+            	//si devuelve true es que la encuentra,
+            	    if(strstr($b[$i],$_REQUEST['aclnombre'])){
+                		$oidParteTercera[$k]=implode('.', array_slice(explode('.', $i), -6,6)); // XXX substr($i,42);
+						$k++;
+                	}
+             	}
+			}
+
+			if(count($oidParteTercera)>0){//La tabla no esta vacia
+				if($_REQUEST['nombre']!="PorDefecto"){
+					$cmdSQL="SELECT ITEM FROM ROUTERACLITEMS WHERE NOMBRE='".$_REQUEST['aclnombre']."' AND ESTADO=1 AND (DESCRIPCION='".$_REQUEST['nombre']."' OR SIEMPREACTIVO='on') ORDER BY ITEM";
+				}else{
+					$cmdSQL="SELECT ITEM FROM ROUTERACLITEMS WHERE NOMBRE='".$_REQUEST['aclnombre']."' ORDER BY ITEM";
+				}
+				//echo $cmdSQL;
+				$resSQL=mysql_query($cmdSQL);
+				$cont=0;
+				if(mysql_num_rows($resSQL)!=0){
+					while ($fila = mysql_fetch_array($resSQL)){
+						$item2[$cont]=$fila["ITEM"];
+				//		echo "<p>Item ".$item2[$cont];
+						$cont++;
+            		}
+    	   		
+            		//echo "<p> Desactivo la lista 1.3.6.14.1.52.2501.1.127.1.6.".$oidTerceraParte;
+            		snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7.1.6.".$oidTerceraParte,"i",2);
+
+             		$estadoUltimaLinea=substr(snmpget($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1]),9);
+             		if($estadoUltimaLinea==2){
+             			//echo "<p>Activo la ultima linea: 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             	        snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",1);
+             		}
+				
+             		for($j=0;$j<count($oidParteTercera)-1;$j++){//Si las acl estan activas las desactiva
+						$rowstatus=substr(snmpget($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[$j]),8);
+						if($rowstatus==1){	
+							//echo "<p>Desactivo 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[$j];
+							snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[$j],"i",2);
+						}
+					}
+    	    		
+             		$cont=0;
+             		//echo "<p>".$_REQUEST['nombre'];
+    	    		$_SESSION['cambio']=$_REQUEST['nombre'];
+    	    		for($l=0;$l<count($oidParteTercera)-1;$l++){
+    	    			if($item2[$cont]==$l+1){
+    	    				//echo "<p> Activo 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[$l];
+							snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[$l],"i",1);
+    	    				$cont++;
+    	    			}
+    	    		}
+    	    		
+					
+					if(count($oidParteTercera)==$item2[count($item2)-1]){
+						//echo "<p>Desactivo UltimaLinea 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",2);
+						//echo "<p>Activo UltimaLinea 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",1);
+					}else{
+						//echo "<p>Desactivo UltimaLinea: 1.3.6.14.1.52.2501.1.12.4.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",2);
+					}
+					
+				
+					
+    	    		
+    	    		//echo "<p>Activo la lista 1.3.6.14.1.52.2501.1.127.1.6.".$oidTerceraParte;
+    	    		snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7.1.6.".$oidTerceraParte,"i",1);
+    	    		GuardarOpcionActivada($_REQUEST['aclnombre'], $_REQUEST['nombre']);
+    	    		
+    	    		$descripcion="Ha activado ".$_REQUEST['nombre']." en ".$_REQUEST['aclnombre']."";
+    	    		proc_Historico("U","$REMOTE_ADDR","$REMOTE_USER",$descripcion,"controlred",$IdiomaEPS);
+				}
+			}else{//La tabla de vacia
+				$error=true;
+			}
+    	}else{//Se va a cambiar una ACL
+			$oid=$_REQUEST['valoroid'];
+    		//echo "OID= ".$oid;
+			$rowStatus=substr(snmpget($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oid),8);	
+				          
+			if($rowStatus==1){//Para desactivar desactivo sin mas
+				//echo "<p> Establecemos la acl activa ".$_REQUEST['aclnombre']." ".$_REQUEST['item'];
+				//echo "<p> Desactivo 1.3.6.14.1.52.2501.1.124.1.18.".$oid;
+				EstablecerACLInactiva($_REQUEST['aclnombre'],$_REQUEST['item']);
+            	snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7.1.6.".$oidTerceraParte,"i",2);
+				snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oid,"i",2);
+  				snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7.1.6.".$oidTerceraParte,"i",1);
+  				
+  				//Se guarda en el hist髍ico
+  				$descripcion="Ha desactivado acl=".$_REQUEST['item']." en ".$_REQUEST['aclnombre']."";
+    	    	proc_Historico("U","$REMOTE_ADDR","$REMOTE_USER",$descripcion,"controlred",$IdiomaEPS);
+		    }else{
+				if($rowStatus==2){//Para activar debo regenerar la tabla entera
+					//echo "<p> Establecemos la acl activa ".$_REQUEST['aclnombre']." ".$_REQUEST['item'];
+					EstablecerACLActiva($_REQUEST['aclnombre'],$_REQUEST['item']);
+					
+					//Se guarda en el historico
+					$descripcion="Ha activado acl=".$_REQUEST['item']." en ".$_REQUEST['aclnombre']."";
+					proc_Historico("U","$REMOTE_ADDR","$REMOTE_USER",$descripcion,"controlred",$IdiomaEPS);
+					
+					$itemsActivos=ObtenerItemsActivos($_REQUEST['aclnombre']);
+					$a=snmpwalkoid($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7");
+					//echo "<p> Extraigo las listas";
+					for(reset($a);$i=key($a);next($a)){
+        				//si devuelve true es que la encuentra,
+            			if(strstr($a[$i],$_REQUEST['aclnombre'])){
+	        				// XXX $oidTerceraParte=substr($i,42);
+	        				$oidTerceraParte=implode('.', array_slice(explode('.', $i), -6,6));
+							$aclservice=true;
+						}
+       				}
+					
+       				
+					$b=snmpwalkoid($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4");
+					$k=0;
+					for(reset($b);$i=key($b);next($b)){
+            			//si devuelve true es que la encuentra,
+            	    	if(strstr($b[$i],$_REQUEST['aclnombre'])){
+                			$oidParteTercera[$k]=implode('.', array_slice(explode('.', $i), -6,6)); // XXX substr($i,42);
+							$k++;
+                		}
+             		}
+       				
+             		//echo "Desactivo la lista";
+					snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7.1.6.".$oidTerceraParte,"i",2);
+					
+             		//echo "<p>1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             		$estadoUltimaLinea=substr(snmpget($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1]),9);
+             		//echo "<p>Estado de la 鷏tima l韓ea".$estadoUltimaLinea;
+             		if($estadoUltimaLinea==2){
+             		//	echo "<p>Activo la 鷏tima l韓ea: 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",1);
+             		}
+             		
+             		//Desactivo La Lista
+             		for($j=0;$j<count($oidParteTercera)-1;$j++){//Si las acl est醤 activas las desactiva
+						$rowstatus=substr(snmpget($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[$j]),8);
+						if($rowstatus==1){	
+						//	echo "<p>Desactivo 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[$j];
+							snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[$j],"i",2);
+						}
+					}
+       				$cont=0;
+					for($j=0;$j<count($oidParteTercera)-1;$j++){
+						if($itemsActivos[$cont]==$j+1){
+							//echo "<p> Activo 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[$j];
+							$cont++;
+							snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[$j],"i",1);
+						}
+					}
+       			
+					if($estadoUltimaLinea==1){
+						//echo "<p>Desactivo 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",2);
+						//echo "<p>Activo 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",1);
+             		}else{
+             			//echo "<p>Desactivo la 鷏tima l韓ea: 1.3.6.14.1.52.2501.1.124.1.18.".$oidParteTercera[count($oidParteTercera)-1];
+             			snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."4.1.18.".$oidParteTercera[count($oidParteTercera)-1],"i",2);
+             		}
+       				
+					//Debo activar la tabla solo los items que tiene activos en la base de datos.
+					//echo "<p>Activo la lista 1.3.6.14.1.52.2501.1.127.1.6.".$oidTerceraParte;
+					snmpset($router,"$comunidadsnmp",$oidPrimeraParte.$oidSegundaParte."7.1.6.".$oidTerceraParte,"i",1);
+        	    }else{
+        	    	$error=true;
+				}
+			}
+			$cambiado=true;
+		}        
+	}
+	
+	if($error==true){?>
+    	<SCRIPT>
+        alert('Ha ocurrido un error con el router. Se van a restaurar los valores por defecto \n');
+        </SCRIPT>	
+		<?php		
+			if(!empty($_REQUEST['intentos'])){?>
+				<SCRIPT>setTimeout("saltoreset(<?php echo $_REQUEST['intentos'];?>,'<?php echo $_REQUEST['codlaboratorio'];?>')",1);</SCRIPT>
+				<?php
+			}else{ ?>
+				<SCRIPT>setTimeout("saltoreset(1,'<?php echo $_REQUEST['codlaboratorio'];?>')",1);</SCRIPT>
+				<?php
+			} 
+	}else{?>
+		
+		<SCRIPT>
+			location.href="controlred.phtml";
+		</SCRIPT>
+		<?php
+	}?>
+
+<?php 
+	
+	}
+		
+}
+?>
+
+<script>
+
+</script>
+</body>

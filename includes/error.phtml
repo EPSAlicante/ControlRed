@@ -1,0 +1,93 @@
+<?PHP
+include_once("../includes/pasovariables.inc");
+registra('GET');
+registra('ENV');
+registra('SERVER');
+registra('POST');
+registra('COOKIE');
+registra('SESSION');
+$DOCUMENT_ROOT=$SCRIPT_FILENAME;
+//Fecha de actualización del documento 
+$vFechaSys="23/07/2001" ; 
+
+//Cargar variables globales
+include_once("../includes/globales.inc");
+//Librerías a utilizar
+
+
+
+//Idioma
+include("../includes/error.rc");
+?>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html >
+<head>
+	<?php include("../includes/meta.inc"); ?>
+	<title><?php echo $zTituloPrincipal?></title>
+
+	<LINK rev=stylesheet href="../includes/estilo.css" type=text/css rel=stylesheet>
+	<LINK rev=stylesheet href="../includes/estiloprint.css" type=text/css rel=stylesheet media="print">
+<?php include("../includes/scripts.inc");?>
+	<script languaje="javascript">
+		
+		function fDestino(boton){
+			 if (boton.name == "Volver") {
+				document.formulario.action="<?php echo $origen ?>";
+			 }
+			 else {
+				 if (boton.name == "Seguir") {
+					document.formulario.action="<?php echo $destino ?>";
+				}
+				else {
+					if (boton.name == "Inicio") {
+						 document.formulario.action="<?php echo $inicio ?>";
+					}
+				 }
+			 }
+			document.formulario.submit();
+		}
+	</script>
+</head>
+<body>
+<div class="general" >
+	<?php include("../includes/cabeceraaccesible.inc")?>
+	
+	<h1 class="tituloPrincipal">
+	<p><?php echo $zTituloPrincipal?></p>
+	</h1>
+
+	<h2 class="tituloSecundario">
+	<p><?php echo $zDetalle?></p>
+	</h2>
+	
+		<form method="POST" name="formulario" action="../includes/error.phtml" align="center">  
+		<?php while ($HTTP_POST_VARS && list($key, $val) = each($HTTP_POST_VARS) ) { ?>
+			<input type="hidden" name="<?php echo $key ?>" value="<?php echo $val ?>">
+		<?php } ?>
+		<?php while ($HTTP_GET_VARS && list($key, $val) = each($HTTP_GET_VARS) ) { ?>
+			<input type="hidden" name="<?php echo $key ?>" value="<?php echo $val ?>">
+		<?php } ?>
+
+
+	<div class="texto">
+		<p><?php echo $msg_error; ?></p>
+	</div
+
+	<div class="texto">
+	<p>
+	 <?php if ($cVolver!='N') { ?>
+		  <input type="button" value="<?php echo $zVolver ?>" name="Volver" tabindex="1" onClick="fDestino(document.formulario.Volver)" alt="<?php echo $zAltVolver?>" accesskey="V">
+	  <?php } ?>
+	  <?php if ($cInicio!='N') { ?>
+		  <input type="button" value="<?php echo $zInicio ?>" name="Inicio" tabindex="2" onClick="fDestino(document.formulario.Inicio)" alt="<?php echo $zAltInicio?>" accesskey="I">
+	  <?php } ?>
+	 
+	</p>
+	</div>
+	</form>
+	
+	<?php include ("../includes/pieaccesible.inc")?>
+</div>
+
+</body>
+</html>

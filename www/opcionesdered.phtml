@@ -1,0 +1,740 @@
+<?PHP
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: www
+ Fichero.....: opcionesdered.phtml
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+$DOCUMENT_ROOT=$_SERVER["SCRIPT_FILENAME"];
+?>
+ 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang=<?php echo obtenerlang($IdiomaEPS)?>>
+<head>
+<?php include("../includes/meta.inc"); ?>
+<style type="text/css">
+#flotante
+{
+	position: absolute;
+	display: none;
+	font-family: Arial;
+	font-size: 1em;
+	font-style: italic;
+	border: 2px solid #808080;
+	background-color: white;
+	padding: 2%;
+	top: 20%;
+	left: 30%;
+}
+</style>
+<?php $zTitle="Control de Red";?>
+<title><?php echo $zTitle?></title>
+<LINK rev=stylesheet href="../includes/estilo.css" type=text/css rel=stylesheet>
+<LINK rev=stylesheet href="../includes/estiloprint.css" type=text/css rel=stylesheet media="print">
+<?php include("../includes/scripts.inc");
+ include_once("../includes/funcionesControlRed.inc");
+?>
+
+</head>
+<body  onbeforeunload="preguntarCierre()" onunload="abandonar()">
+<script>
+function salto(){
+        location.href="./salir.phtml";
+}
+
+function salir(){
+        setTimeout("salto()",1);
+}
+
+
+function AJAXCrearObjeto(){
+	  var obj;
+	  if (window.XMLHttpRequest) { // no es IE
+	   obj = new XMLHttpRequest();
+	  }
+	  else { // Es IE o no tiene el objeto
+	   try {
+	    obj = new ActiveXObject("Microsoft.XMLHTTP");
+	   }
+	   catch (e) {
+	    alert("El navegador utilizado no está soportado");
+	   }
+	  }
+	  return obj;
+}
+
+
+function preguntarCierre(){
+	  if(document.formulario.salir.value=="no"){
+      	
+      }else{
+	<?php
+        if($tipoAcceso=="Profesor"){
+        ?>	
+		document.formulario.nombre.value="PorDefecto";
+		document.formulario.aclnombre.value=document.formulario.codlaboratorio.value+"i";
+		var formulari = document.getElementById('formulario');
+		var longitudFormulario = formulari.elements.length;
+		var cadenaFormulario = "";
+		var sepCampos="";
+		for (var i=0; i <= formulari.elements.length-1;i++) {
+			cadenaFormulario += sepCampos+formulari.elements[i].name+'='+encodeURI(formulari.elements[i].value);
+			sepCampos="&";
+		}
+		//alert(cadenaFormulario);
+		
+		// Preparamos la petición con parametros
+		var url='cambiarestado.phtml?'+cadenaFormulario;
+		oXML.open('GET',url, true);
+		// Preparamos la recepción
+		oXML.onreadystatechange = leerDatos();
+		// Realizamos la petición
+		oXML.send(null);
+		alert('Acaba de activar los valores por defecto.');
+    <?php } ?>
+      }
+}
+
+function leerDatos() {
+	  if (oXML.readyState == 4) {
+	  //alert (oXML.responseText);
+	  }
+}
+
+function abandonar(){
+        if(document.formulario.salir.value=="no"){
+        	
+        }else{
+		<?php	
+			//document.formulario.aclnombre.value="PorDefecto";
+			//
+        	//var formulari = document.getElementById('formulario');
+        	//var longitudFormulario = formulari.elements.length;
+        	//var cadenaFormulario = "";
+        	//var sepCampos="";
+        	//for (var i=0; i <= formulari.elements.length-1;i++) {
+        	//	cadenaFormulario += sepCampos+formulari.elements[i].name+'='+encodeURI(formulari.elements[i].value);
+        	//	sepCampos="&";
+        	//}
+        	//alert(cadenaFormulario);
+ 			
+ 			// Preparamos la petición con parametros
+ 			//oXML.open('GET','cambiarestado.phtml', false);
+ 			// Preparamos la recepción
+ 			//oXML.onreadystatechange = leerDatos();
+ 			// Realizamos la petición
+ 			//oXML.send(cadenaFormulario);
+
+            //alert(oXML.responseText);
+            
+		?>
+        <?php
+        	if($tipoAcceso=="Profesor"){
+        		?>	
+        	  //  document.formulario.aclnombre.value="Reset";
+        	  //  document.formulario.nombre.value=document.formulario.codlaboratorio.value+"i";
+			  // 	document.formulario.salir.value="true";
+			  // 	document.formulario.submit();
+			  // 	alert('Si abandona la pagina van a restaurarse los valores por defecto');
+				<?php 
+			}?>
+		}
+}
+
+
+
+
+function cambiorouter(){
+	if(document.opcionrouter.routers.value==2){
+		location.href="controlred.phtml?router=2";
+	}
+	if(document.opcionrouter.routers.value==1){
+		location.href="controlred.phtml?router=1";
+	}	
+}
+</script>
+
+
+
+<!--DECLARACION VARIABLES PROPIA-->
+<SCRIPT>
+function GuardarDescripcion(hacer){
+
+	document.formulario.salir.value="no";
+	document.formularioACL.action="cambiarACL.phtml";
+	document.formularioACL.hacer.value=hacer;
+	document.formularioACL.submit();
+	
+}
+
+
+function pregunta(tipo,oid,nombre,item){
+	<?php
+	//if($tipoAcceso=="Profesor"){
+	?>
+		<?php
+		if(!empty($_SESSION['cambio'])){ ?>
+			if(tipo!="Reset"){
+				if(confirm("¿Desea aplicar la restricción?")){
+						DesactivarBotones(nombre);
+						showdiv();
+						document.formulario.salir.value="no";
+						document.formulario.aclnombre.value=tipo;
+                    	document.formulario.valoroid.value=oid;
+                    	document.formulario.item.value=item;
+                    	document.formulario.nombre.value=nombre;
+                     	document.formulario.submit();
+				}
+			}else{  
+				if(tipo!="Reset"){		
+        	        if(confirm("¿Desea aplicar la restricción?")){
+        	        	DesactivarBotones(nombre);
+        	        	showdiv();
+        	        	document.formulario.salir.value="no";
+        	        	document.formulario.item.value=item;
+                        document.formulario.aclnombre.value=tipo;
+                        document.formulario.valoroid.value=oid;
+                        document.formulario.nombre.value=nombre;
+                        document.formulario.submit();
+                    }
+				}else{
+					if(confirm("¿Desea aplicar la restricción?")){
+						DesactivarBotones(nombre);
+						showdiv();
+						document.formulario.salir.value="no";
+						document.formulario.aclnombre.value=tipo;
+						document.formulario.valoroid.value=oid;
+						document.formulario.nombre.value="PorDefecto";
+						document.formulario.submit();
+					}
+				}             
+			}			 
+			<?php
+ 		}else{ ?>
+			if(tipo!="Reset"){
+				if(confirm("¿Desea aplicar la restricción?")){
+					DesactivarBotones(nombre);
+					showdiv();
+					document.formulario.salir.value="no";
+					document.formulario.aclnombre.value=tipo;
+					document.formulario.valoroid.value=oid;
+					document.formulario.nombre.value=nombre;
+					document.formulario.submit();
+				}
+			}else{
+				if(confirm("No ha seleccionado ninguna opción. ¿Desea restaurar de todos modos?")){
+					DesactivarBotones("PorDefecto");
+					showdiv();
+					document.formulario.aclnombre.value=tipo;
+					document.formulario.salir.value="no";
+					document.formulario.valoroid.value=oid;
+					document.formulario.nombre.value="PorDefecto";
+					document.formulario.submit();
+				}
+			}
+			<?php
+		} ?>
+		
+	<?php
+	//}else{?>
+		//if(confirm("¿Desea cambiar el estado de la acl?")){
+		//	alert("alert6 "+ tipo +" Oid:"+ oid+" Nom:"+ nombre+" item:"+item);
+		//	document.formulario.item.value=item;
+        //     document.formulario.aclnombre.value=tipo;
+        //     document.formulario.valoroid.value=oid;
+	    //     document.formulario.submit();
+     //   }
+	<?php //} ?>
+}// Fin function
+
+function CambiarUnaACL(tipo,oid,nombre,item){
+	if(confirm("¿Desea cambiar el estado de la acl?")){
+		showdiv();
+		document.formulario.salir.value="no";
+		document.formulario.item.value=item;
+        document.formulario.aclnombre.value=tipo;
+        document.formulario.valoroid.value=oid;
+        document.formulario.submit();
+    }
+	
+}
+
+oXML = AJAXCrearObjeto();
+
+</SCRIPT>
+
+<?php 
+function DevolverRestriccion($status){
+
+	if($status==1){
+		return "permit";
+	}else{
+		return "deny";
+	}
+}
+
+
+function DevolverOperadorPuerto($operador){
+
+		switch($operador){
+			case 1: return " ";
+			case 2: return "=";
+			case 3:return "!=";
+			case 4: return "&lt";
+			case 5: return "&gt";
+			case 6: return "range";
+		}
+}
+
+function FiltrarPuerto($puerto){
+
+		if($puerto==0){
+			return " ";
+		}else{
+			return $puerto;
+		}
+
+}
+
+function DevolverProtocolo($protocol){
+	switch ($protocol){
+		case 1: return "ip";
+		case 2: return "tcp";
+		case 3: return "udp";
+		case 4: return "icmp";
+		case 5: return "igmp";
+		case 6: return "ipx";
+		case 7: return "ipxsap";
+		case 8: return "ipxrip";
+		default: return "no ident";
+	}
+}
+
+function DevolverEstado($status){
+	if($status==1){
+		return "Activo";
+	}else{
+		return "Deshabilitado";
+	}
+}
+
+function DevolverOpcionEstado($status){
+	if($status==1){
+		return "Deshabilitar";
+	}else{
+		return "Habilitar";
+	}
+}
+
+
+
+function DevolverDescripcion($descripcion){
+
+	if($descripcion=="eps"){
+		return "Solo permite el acceso a la red de la EPS";
+	}
+	if($descripcion=="cv"){
+		return "Solo permite el acceso a la página de la Universidad, al Campus Virtual y al moodle-UA";
+	}
+	if($descripcion=="PorDefecto"){
+	 	return "Restaura los valores por defecto";
+	}
+	if($descripcion=="dlsi"){
+		return "Solo permite el acceso a los servidores de prácticas del DLSI";
+	}
+	if($descripcion=="login"){
+		return "Solo permite iniciar sesión en el ordenador";
+	}
+	if($descripcion=="ua"){
+		return "Solo permite el acceso a cualquier recurso de la Universidad de Alicante";
+	}
+	if($descripcion=="moodleUA"){
+		return "Solo permite el acceso al moodle de la Universidad de Alicante";
+	}
+	
+}
+
+
+
+?>
+  <!--<h2 class="tituloSecundario">-->
+<?php
+			
+	if(($kA!=0)&&($k!=0)){?>
+				<?php	
+				if($tipoAcceso!="Profesor"){ 
+
+					echo "<br>";
+					//si es profesor vamos a mostrarle las opciones que tiene para el control de red
+					$nombreOpcion="*";
+					
+					$jj=0;
+					
+					for($j=0;$j<$k;$j++){
+	                 	//XXX $aclName=substr(snmpget($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."1".$oidTerceraParte[$j]),8);
+	                 	$aclName=substr(snmp2_get($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.".$oidTerceraParte[$j]),8);
+	                 	if(strstr($aclName,"i")){
+		                 	$opcionesI[$jj]=$oidTerceraParte[$j];
+							$jj++;
+	                 	}                                                                              
+					}
+					
+					
+					$aclName2=preg_replace("/\"/","",substr(snmpget($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.".$opcionesI[0]),8)); //XXX antes 1 en vez de 4.
+					$cmdSQL1="SELECT NOMBRE FROM ROUTERACLITEMS WHERE NOMBRE='".$aclName2."' and DESCRIPCION=''";
+					$resSQL1=mysql_query($cmdSQL1);
+					
+					if(mysql_num_rows($resSQL1)!=0){
+						echo "<p>Debe clasificar al menos una categoria de ACLs";
+					}else{
+						$cmdSQL="SELECT DISTINCT(DESCRIPCION) FROM ROUTERACLITEMS WHERE NOMBRE='".$aclName2."'";
+                    	$resSQL= mysql_query($cmdSQL);
+
+                    	echo "<table class=\"secundaria\" sumary=\"Id de ACL\" align=\"center\">";
+						echo "<tr>";
+						echo "\n<th id=\"header21\">Opción</th>";
+						echo "\n<th id=\"header22\">Descripción</th>";
+						echo "</tr>";
+                    	echo "<tr><td>&nbsp</td></tr>";
+                    	
+	                    $cont=0;
+    	              	if(mysql_num_rows($resSQL)!=0){//Este while se puede quitar añadiendo un where a la select
+        	     			while ($fila = mysql_fetch_array($resSQL)){
+								$tipoRestriccion[$cont]=$fila["DESCRIPCION"];
+								$cont++;
+                    	   	}
+	    	        	}
+							
+	    	        	$restriccion2=ObtenerOpcionActivada($aclName2);
+						for($cont=0;$cont<count($tipoRestriccion);$cont++){
+	    	            	if($restriccion2==$tipoRestriccion[$cont]){
+            	        		$estado="Activo";	
+                	    	}else{
+                    	    	$estado="Deshabilitado";
+                    		}
+					  	
+							echo "<tr>";
+                    		echo "<td align=\"center\" width=\"25%\">";
+
+                    		if($estado=="Activo"){
+                        		echo "<input headers=\"header21\" type=button onclick=\"pregunta('".$aclName2."','".$opcionesI[$j]."','".$tipoRestriccion[$cont]."',0)\" name='".$tipoRestriccion[$cont]."' id='".$tipoRestriccion[$cont]."' value='".$tipoRestriccion[$cont]."'  disabled  style=\"width: 100%;color:green;font-weight:bold\"></td>";
+                    		}else{
+								echo "<input headers=\"header21\" type=button onclick=\"pregunta('".$aclName2."','".$opcionesI[$j]."','".$tipoRestriccion[$cont]."',0)\" name='".$tipoRestriccion[$cont]."' id='".$tipoRestriccion[$cont]."' value='".$tipoRestriccion[$cont]."'   style=\"width: 100%;color:red;font-weight:bold\"></td>";     	 
+							} 	
+							?>
+                    		
+	                		<td headers="header22"  align="center"><LABEL><?php echo DevolverDescripcion($tipoRestriccion[$cont]);?></LABEL></td>
+							
+                   	 		</tr>
+							<tr><td>&nbsp</td></tr>
+							<script type="text/javascript">
+								function DesactivarBotones(opcionActiva){
+									<?php for($cont2=0;$cont2<count($tipoRestriccion);$cont2++){?>
+									document.getElementById("<?php echo $tipoRestriccion[$cont2];?>").disabled=true;
+									<?php }?>
+								}
+							</script>
+							<?php
+							
+						}
+					}
+					echo "</table>";
+					echo "\n<br>";
+					echo "\n<h2 class=\"tituloSecundario\">Lista y clasificación de ACL</h2>";
+					echo "\n<br>";
+				
+					
+				?>
+				
+
+
+</script>				
+					<table class="secundaria" sumary="Id de ACL" align="center">
+					<tr>
+					<th id="header1">ID</th>
+					<th id="header2">IIEM</th>
+					<th id="header3">Restric</th>
+					<th id="header4">Protoc</th>
+					<th id="header5">IP SRC</th>
+					<th id="header6">Mask SRC</th>
+					<th id="header7">IP Dst</th>
+					<th id="headers8">Mask dst </th>
+					<th id="header9">SRC port</th>
+					<th id="header10">DST port</th>
+					<th id="header11">Descripcion</th>
+					<th id="header12">Estado</th>
+					<th id="header13">Opcion</th>	
+					<th id="header14">Siempre Visible</th>
+				<?php 
+					$eleccionrouter=$router;
+					
+					//si el usuario es el administrador va a obtener todas las acls,tanto de entrada como de salida.
+					
+					//Busco en fucnion de las listas
+					$n=0;
+					$cadenaForm="<form id='formularioACL' name='formularioACL' method='post'>";
+					$cadenaForm.="\n<input type='hidden' name='numeroACL' value='".$kA."'>";
+					$numeroLista=0;
+					
+					$cont=0;
+					for($n=0;$n<$kA;$n++){	
+						$aclName=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.1.".$listaACLService[$n]);    
+						$item2=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.2.".$listaACLService[$n]);
+                        $restriction=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.3.".$listaACLService[$n]);  
+                        $protocol=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.4.".$listaACLService[$n]);
+                        $ipOrigen=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.5.".$listaACLService[$n]);
+                        $maskOrigen=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.6.".$listaACLService[$n]);
+                        $ipDest=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.7.".$listaACLService[$n]);
+                        $maskDest=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.8.".$listaACLService[$n]);
+    					$tos=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.9.".$listaACLService[$n]);
+                        $portorig=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.10.".$listaACLService[$n]);
+                        $portdest=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.11.".$listaACLService[$n]);
+                        $res18=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.18.".$listaACLService[$n]);
+                        $portCompOrig=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.12.".$listaACLService[$n]);
+                        $portCompDest=snmpwalk($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."4.1.13.".$listaACLService[$n]);
+                 		//echo "aclName vale: ".count($aclName);
+                        	
+                        for($m=0;$m<count($aclName);$m++){
+								//Filtro las ACLS
+                        	$nombre1[$m]=str_replace(array('"',' '),"",explode(':', $aclName[$m])[1]);  // XXX substr($aclName[$m],8));
+							$item[$m]=str_replace(array('"',' '),"", explode(':', $item2[$m])[1]);// XXX substr($item2[$m],9);
+							$restriccion[$m]=str_replace(array('"',' '),"",explode(':', $restriction[$m])[1]); //XXX substr($restriction[$m],8);
+							$protocolo[$m]=str_replace(array('"',' '),"",explode(':', $protocol[$m])[1]); //XXX substr($protocol[$m],8);
+							$src[$m]=str_replace(array('"',' '),"",explode(':', $ipOrigen[$m])[1]); // XXX substr($ipOrigen[$m],10);
+							$masksrc[$m]=str_replace(array('"',' '),"",explode(':', $maskOrigen[$m])[1]);// XXX substr($maskOrigen[$m],10);
+							$dst[$m]=str_replace(array('"',' '),"",explode(':', $ipDest[$m])[1]);// XXX substr($ipDest[$m],10);
+							$maskdst[$m]=str_replace(array('"',' '),"",explode(':', $maskDest[$m])[1]);// XXX substr($maskDest[$m],10);
+							$tose[$m]=str_replace(array('"',' '),"",explode(':', $tos[$m])[1]); //XXX substr($tos[$m],8);
+							$portsrc[$m]=str_replace(array('"',' '),"",explode(':', $portorig[$m])[1]); //XXX substr($portorig[$m],8);
+							$portdst[$m]=str_replace(array('"',' '),"",explode(':', $portdest[$m])[1]); //XXX substr($portdest[$m],8);
+							$estado1[$m]=str_replace(array('"',' '),"",explode(':', $res18[$m])[1]); //XXX substr($res18[$m],8);
+							$opersrc[$m]=str_replace(array('"',' '),"",explode(':', $portCompOrig[$m])[1]); //XXX substr($portCompOrig[$m],8);
+							$operdst[$m]=str_replace(array('"',' '),"",explode(':', $portCompDest[$m])[1]); //XXX substr($portCompDest[$m],8);
+                        }
+ 		
+                        
+                        $cadenaForm.="<input type='hidden' name='nombreACL".$n."' value='".$nombre1[0]."'>";
+                        //Voy a gestionar la base de datos
+                        $cambioACL=0;
+                        for($m=0;$m<count($nombre1);$m++){
+                        	$descripcion[$m]=ObtenerDescripcionACL($nombre1[$m],$item[$m],$restriccion[$m],$protocolo[$m],$src[$m],$masksrc[$m],$dst[$m],$maskdst[$m],$tose[$m],$opersrc[$m],$portsrc[$m],$operdst[$m],$portdst[$m],$estado1[$m]);
+                        	$activo[$m]=ObtenerSiempreActiva($nombre1[$m],$item[$m],$restriccion[$m],$protocolo[$m],$src[$m],$masksrc[$m],$dst[$m],$maskdst[$m],$tose[$m],$opersrc[$m],$portsrc[$m],$operdst[$m],$portdst[$m],$estado1[$m]);
+
+                        	if(!ExisteACLIgual($nombre1[$m],$item[$m],$restriccion[$m],$protocolo[$m],$src[$m],$masksrc[$m],$dst[$m],$maskdst[$m],$tose[$m],$opersrc[$m],$portsrc[$m],$operdst[$m],$portdst[$m],$estado1[$m])){
+                        			$cambioACL=1;
+                        	}                      		
+                        }
+                        
+                        	
+                        if($cambioACL==1){
+                        	//Borro la tabla actual
+                        	//echo "<p> Borro la lista ". $nombre1[0];
+                        	BorrarListaACL($nombre1[0]);
+                        	
+                        	//Escribo la tabla entera.
+                        	for($m=0;$m<count($nombre1);$m++){		
+                        		if(AltaACL($nombre1[$m],$item[$m],$restriccion[$m],$protocolo[$m],$src[$m],$masksrc[$m],$dst[$m],$maskdst[$m],$tose[$m],$opersrc[$m],$portsrc[$m],$operdst[$m],$portdst[$m],$estado1[$m],$descripcion[$m],$activo[$m])){
+										// echo "<p>AltaCorrecta";					
+                        		}else{
+                        			//	echo "<p>Alta Incorrecta";
+                        		}
+                        	}
+                        }
+                        
+                        for($m=0;$m<count($aclName);$m++){
+                        	$cadenaForm.="<tr>";
+							$cadenaForm.="\n<td headers=\"header1\">".$nombre1[$m]."</td>";
+							$cadenaForm.="\n<td headers=\"header2\">".$item[$m]."</td>";
+							$cadenaForm.="\n<td headers=\"header3\">".DevolverRestriccion($restriccion[$m])."</td>";
+							$cadenaForm.="\n<td headers=\"header4\">".DevolverProtocolo($protocolo[$m])."</td>";
+							$cadenaForm.="\n<td headers=\"header5\">".$src[$m]."</td>";
+							$cadenaForm.="\n<td headers=\"header6\">".$masksrc[$m]."</td>";
+							$cadenaForm.="\n<td headers=\"header7\">".$dst[$m]."</td>";
+							$cadenaForm.="\n<td headers=\"header8\">".$maskdst[$m]."</td>";
+							$cadenaForm.="\n<td headers=\"header9\">".DevolverOperadorPuerto($opersrc[$m])." ".FiltrarPuerto($portsrc[$m])."</td>";
+							$cadenaForm.="\n<td headers=\"header10\">".DevolverOperadorPuerto($operdst[$m])." ".FiltrarPuerto($portdst[$m])."</td>";
+								
+							if($descripcion[$m]!=""){
+								$cadenaForm.="\n<td headers=\"header11\" ><SELECT name='".$nombre1[$m].$item[$m]."' DISABLED>";
+								$cadenaForm.="\n<OPTION VALUE='".$descripcion[$m]."' SELECTED>".$descripcion[$m]."</OPTION>";
+							}else{
+								$cadenaForm.="\n<td><SELECT name='".$nombre1[$m].$item[$m]."'>";
+								$cadenaForm.="\n<OPTION VALUE='PorDefecto' SELECTED>PorDefecto</OPTION>";
+								$cadenaForm.="\n<OPTION VALUE='eps' >EPS</OPTION>";
+								$cadenaForm.="\n<OPTION VALUE='login'>login</OPTION>";
+								$cadenaForm.="\n<OPTION VALUE='cv'>cv</OPTION>";
+								$cadenaForm.="\n<OPTION VALUE='ua'>ua</OPTION>";
+								$cadenaForm.="\n<OPTION VALUE='dlsi'>dlsi</OPTION>";
+								$cadenaForm.="\n<OPTION VALUE='moodleUA'>moodleUA</OPTION>";
+							}
+							$cadenaForm.="\n</SELECT>";
+							$cadenaForm.="\n</td>";
+							$cadenaForm.="\n<td headers=\"header12\">".DevolverEstado($estado1[$m])."</td>";
+							if($descripcion[$m]!=""){	
+								$cadenaForm.="\n<td headers=\"header13\"><input type='button' name='conexion_internet' value='".DevolverOpcionEstado($estado1[$m])."' onclick=\"CambiarUnaACL('".$nombre1[$m]."','".implode('.',array_slice(explode('.', $oidTerceraParte[$cont]), -6,6))."','".$tipoRestriccion[$cont]."','".$item[$m]."')\" /></td>";
+							}else{
+								$cadenaForm.="\n<td headers=\"header13\">No Clasificada</td>";
+							}
+							if($activo[$m]!=''){
+								$cadenaForm.="\n<td headers=\"header14\"><input type='checkbox' name='check".$nombre1[$m].$item[$m]."' checked  DISABLED/><td>";
+							
+							}else{
+								if($descripcion[$m]!=""){
+									$cadenaForm.="\n<td headers=\"header14\"><input type='checkbox' name='check".$nombre1[$m].$item[$m]."' DISABLED/><td>";
+								}else{
+									$cadenaForm.="\n<td headers=\"header14\"><input type='checkbox' name='check".$nombre1[$m].$item[$m]."' /><td>";
+								}
+							}
+							$cont++;
+							$cadenaForm.="\n</tr>";
+                       	}//Fin del for
+					
+					}//FOR GRANDE
+					$cont=0;
+					$cadenaForm.="\n<input type='hidden' name='hacer' value=''/>";
+					$cadenaForm.="\n</table>";
+					$cadenaForm.="\n<div style=\"text-align:center\">";
+					$cadenaForm.="\n<input type='button' value='Guardar' onClick='GuardarDescripcion(\"Guardar\");' />";
+					$cadenaForm.="\n&nbsp &nbsp &nbsp";
+					$cadenaForm.="\n<input type='button' value='Borrar' onClick='GuardarDescripcion(\"Borrar\");' />";
+					$cadenaForm.="\n</div>";
+					echo $cadenaForm;
+					echo "\n</form>";
+					
+				//}else{
+					//Profesor
+				
+				}else{
+				
+					//Profesor
+					echo "<h2 class=\"tituloSecundario\">Opciones de Red</h2>";
+					echo "<br>";
+					
+					//si es profesor vamos a mostrarle las opciones que tiene para el control de red
+					$nombreOpcion="*";
+
+					$jj=0;
+					for($j=0;$j<$k;$j++){
+	                 	$aclName=substr(snmpget($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."1".$oidTerceraParte[$j]),8);
+						if(strstr($aclName,"i")){
+							$opcionesI[$jj]=$oidTerceraParte[$j];
+							$jj++;
+						}                                                                              
+					}
+					
+					
+					
+					$aclName2=ereg_replace("\"","",substr(snmpget($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."1".$opcionesI[0]),8));
+
+					$cmdSQL1="SELECT NOMBRE FROM ROUTERACLITEMS WHERE NOMBRE='".$aclName2."' and DESCRIPCION=''";
+					$resSQL1=mysql_query($cmdSQL1);
+					
+					if(mysql_num_rows($resSQL1)!=0){
+						echo "<p>Aplicación no disponible. Por favor contacte con los técnicos de la EPS.";
+					}else{
+						$cmdSQL="SELECT DISTINCT(DESCRIPCION) FROM ROUTERACLITEMS WHERE NOMBRE='".$aclName2."'";
+                    	$resSQL= mysql_query($cmdSQL);
+	
+                    	echo "<table class=\"secundaria\" sumary=\"Id de ACL\" align=\"center\">";
+						echo "<tr>";
+						echo "\n<th id=\"header21\">Opcion</th>";
+						echo "\n<th id=\"header22\">Descripcion</th>";
+						echo "</tr>";
+	                    
+						$cont=0;
+    	              	if(mysql_num_rows($resSQL)!=0){//Este while se puede quitar añadiendo un where a la select
+        	     			while ($fila = mysql_fetch_array($resSQL)){
+								$tipoRestriccion[$cont]=$fila["DESCRIPCION"];
+								$cont++;
+                    	   	}
+	    	        	}
+						$restriccion2=ObtenerOpcionActivada($aclName2);
+						for($cont=0;$cont<count($tipoRestriccion);$cont++){
+	    	            	if($restriccion2==$tipoRestriccion[$cont]){
+            	        		$estado="Activo";	
+                	    	}else{
+                    	    	$estado="Deshabilitado";
+                    		}
+					  	
+							echo "<tr>";
+                    		echo "<td header=\"header21\" align=\"center\" width=\"25%\">";
+
+                    		if($estado=="Activo"){
+                        		echo "<input headers=\"header21\" type=button onclick=\"pregunta('".$aclName2."','".$opcionesI[$j]."','".$tipoRestriccion[$cont]."',0)\" name='".$tipoRestriccion[$cont]."' id='".$tipoRestriccion[$cont]."' value='".$tipoRestriccion[$cont]."'  disabled  style=\"width: 100%;color:green;font-weight:bold\"></td>";
+                    		}else{
+								echo "<input headers=\"header21\" type=button onclick=\"pregunta('".$aclName2."','".$opcionesI[$j]."','".$tipoRestriccion[$cont]."',0)\" name='".$tipoRestriccion[$cont]."' id='".$tipoRestriccion[$cont]."' value='".$tipoRestriccion[$cont]."'   style=\"width: 100%;color:red;font-weight:bold\"></td>";     	 
+							} 	
+							?>
+                    		
+                    		<td headers="header22"  align="center"><LABEL><?php echo DevolverDescripcion($tipoRestriccion[$cont]);?></LABEL></td>
+                   	 		</tr>
+							<tr><td>&nbsp</td></tr>
+							<script type="text/javascript">
+								function DesactivarBotones(opcionActiva){
+									<?php for($cont2=0;$cont2<count($tipoRestriccion);$cont2++){?>
+									document.getElementById("<?php echo $tipoRestriccion[$cont2];?>").disabled=true;
+									<?php }?>
+								}
+							</script>
+							<?php
+						}
+					}				
+				
+				}
+				
+				
+				?>					                                      
+				<form method="post" name="formulario" id="formulario" action="cambiarestado.phtml">
+				<!-- <tr>
+                <td align="center" width="25%"><input type=button onclick="pregunta('<?php echo $aclName2?>','','PorDefecto','')" name="Resetear_red" value="Reset" style="width: 100%;font-weight:bold"></td>  
+                <td width="15%" align="center" bgcolor="D3D3D3">&nbsp</td>
+				<td width="50%" align="center" bgcolor="C0C0C0"><LABEL>Vuelta a los valores por defecto</LABEL></td> 
+				<td width="10%">&nbsp;</td>	
+                </tr>-->
+                <input type="hidden" name="router" value="<?php echo $router?>">	
+				<input type="hidden" name="aclnombre" value="">
+				<input type="hidden" name="item" value="">
+                <input type="hidden" name="valoroid" value="">
+				<input type="hidden" name="salir" value="">
+				<input type="hidden" name="nombre" value="">
+                <input type="hidden" name="codlaboratorio" value=<?php echo $codLaboratorio?>>
+				
+				</table>
+				</form>
+				<?php
+ 		} ?>
+				</br></br></br>	
+        		<?php
+        if($tipoAcceso=="Administrador"){?>
+        	<input type=button name="salir" onclick="salir()" value="<< Salir">
+        	<?php
+		} ?>
+
+
+		<div  id="flotante">
+		<br>
+		<p align="center">Se está aplicando la configuraci&oacute;n, esta operaci&oacute;n puede llevar unos segundos</p>
+		<div align="center"><img src="./imagenes/barraProgreso.gif" ></div>
+		<br>
+		</div>
+
+	<script type="text/javascript">
+	function showdiv()
+	{
+
+		document.getElementById('flotante').style.display='block';
+
+		
+		return;
+	}
+
+	</script>
+</body>
+</html>
+
+
+

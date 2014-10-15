@@ -1,0 +1,301 @@
+<?PHP
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: www
+ Fichero.....: controlred.phtml
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+//include_once("pasovariables.inc");
+
+$DOCUMENT_ROOT=$_SERVER["SCRIPT_FILENAME"];
+session_start();
+//session_register('nombreLaboratorio');
+error_reporting(E_ALL ^ E_NOTICE);
+$REMOTE_USER=$_SERVER["REMOTE_USER"];
+//$REMOTE_USER="admin";
+$_SESSION['nombreLaboratorio']="";
+
+?>
+<?php
+  //Cargar variables globales
+   include("../includes/globales.inc");
+   include_once("../includes/funcionesControlRed.inc");
+	$vFechaSys = date("d/m/Y", getlastmod());
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang=<?php echo obtenerlang($IdiomaEPS)?>>
+<head>
+<?php include("../includes/meta.inc"); ?>
+
+<?php $zTitle="Control de Red";?>
+<title><?php echo $zTitle?></title>
+<LINK rev=stylesheet href="../includes/estilo.css" type=text/css rel=stylesheet>
+<LINK rev=stylesheet href="../includes/estiloprint.css" type=text/css rel=stylesheet media="print">
+<?php include("../includes/scripts.inc");
+?>
+
+
+<script>
+function saltofin()
+{
+        location.href="./salir.phtml";
+}
+
+function salirfin()
+{
+        setTimeout("saltofin()",1);
+}
+
+</script>
+<?php
+
+function consultaPermisosAcceso($usuario) {
+     $grupoUsuario=GrupoUsuario($usuario);
+     $permisos="sinPermiso";
+     switch ($grupoUsuario){
+           case "profesores":
+           case "asignaturas":
+           	$permisos="Profesor";
+                break;
+           case "administradores":
+                $permisos="Administrador";
+                break;
+           default:
+		$permisos="sinPermiso";
+                break;
+     }
+     return $permisos;
+}
+
+
+//pasando una dirección almacenada en un string, nos devuelve la cadena particionada en el formato ip
+function dividirIp(&$primeraParteIp,&$segundaParteIp,&$terceraParteIp,&$cuartaParteIp,$ip){
+
+	$primeraParteIp="";
+	$segundaParteIp="";
+	$terceraParteIp="";
+	$cuartaParteIp="";
+		
+    $primera=false;
+    $segunda=false;
+    $tercera=false;
+
+    for($j=0;$j<strlen($ip);$j++){
+    	if(!strcmp($ip[$j],".")){
+        	if(!$primera)
+            	$primera=true;
+            else{
+            	if(!$segunda)
+                	$segunda=true;
+                else{
+                   if(!$tercera)
+                   	$tercera=true;
+                }
+            }
+        }else{
+        	if(!$primera)
+        		$primeraParteIp=$primeraParteIp.$ip[$j];
+            else{
+                if(!$segunda)
+                	$segundaParteIp=$segundaParteIp.$ip[$j];
+                else{
+                	if(!$tercera)
+                		$terceraParteIp=$terceraParteIp.$ip[$j];
+                    else
+                        $cuartaParteIp=$cuartaParteIp.$ip[$j];
+                }
+             }
+        }
+     }
+	
+}?>
+
+
+</head>
+<body>
+
+<?php
+   //Conexión a la BD
+   $db=mysql_connect($gIP, $gUser, $gPassword); 
+   if ($db)
+      $res=mysql_select_db($gBaseDatos,$db);
+   if (!$db || !$res)
+      if (!$db)
+         echo "<div class=general><p>ERROR: $php_errormsg</p></div>";
+      else
+         echo "<div class=general><p><big>ERROR: Base de Datos $gBaseDatos inexistente</p></div>";
+   else {
+		
+?>
+
+
+	<div class="general" >
+	<?php include("../includes/cabeceraaccesible.inc")?>
+	<!-- <br><br>-->
+	<?php
+	$tipoAcceso=consultaPermisosAcceso($REMOTE_USER);
+	//$tipoAcceso=consultaPermisosAcceso("admin");
+	if ($tipoAcceso == "sinPermiso") {
+		echo "<div class=texto><p>Usuario sin privilegios</p></div>";
+	}
+	else { 
+		$vfecha = FechaActual();
+                $sql2="SELECT CN,SN FROM USUARIOSWEB WHERE CODUSU='$REMOTE_USER'";
+                $result2=mysql_query($sql2);
+                if (mysql_num_rows($result2)!=0){
+                    while ($fila = mysql_fetch_array($result2)) {
+               	    	$nombre = $fila["CN"];
+                    	$apellidos = $fila["SN"];
+                    }//del while
+                }
+	//vamos a dividir la ip desde la que se ha conectado el profesor y mediante un select vamos a ir recorriendo 
+	//todas las instancias de la tabla buscando que la ip coincida entre el rango del GATEWAY y el BROADCAST
+		if(!empty($_REQUEST[nombre])){
+        		$_SESSION['nombreLaboratorio']=$_REQUEST[nombre];
+    		}
+
+
+	   if(($tipoAcceso=="Profesor")||(!empty($_SESSION['nombreLaboratorio']))){ 
+		//echo "<p>**Profesor o nombre de laboratorio asignado";
+		//buscamos el laboratorio desde donde se ha conectado el profesor, o el laboratorio seleccionado por el administrador
+		if(!empty($_SESSION['nombreLaboratorio'])){//Si el laboratorio se lo pasa el administrador
+			//Obtenemos el codigo de laboratorio
+			$sql= "SELECT CODLAB FROM LABORATORIOSTR WHERE NOMBRE='".$_SESSION['nombreLaboratorio']."'";
+			
+			$result= mysql_query($sql);
+			while ($fila = mysql_fetch_array($result)){
+					$codLaboratorio=$fila["CODLAB"];
+			//		$nombreLab=$_SESSION['nombreLaboratorio'];
+			}
+		}else{
+		//	echo "<p>**El profesor se ha conectado";
+			$encontrado=false;
+			//TODO CAMBIAR LA IP
+			//IP LAB 28  "172.20.41.105"
+			//IP LAB 22  -> 172.20.43.170
+			$IPPRUEBAS=$REMOTE_ADDR;
+			//$REMOTE_ADDR
+			
+			dividirIp($ip1,$ip2,$ip3,$ip4,$IPPRUEBAS);
+			$sql = "SELECT CODLAB,GATEWAY,BROADCAST,NOMBREOLD FROM LABORATORIOS";
+			
+       		$result = mysql_query($sql);
+       		//Busca el laboratorio desde donde se ha conectado
+        	if (mysql_num_rows($result)!=0){
+				while ($fila = mysql_fetch_array($result)) {
+					$ipMinima = $fila["GATEWAY"];
+                    $ipMaxima = $fila["BROADCAST"];
+				
+					dividirIp($ipMin1,$ipMin2,$ipMin3,$ipMin4,$ipMinima);
+					dividirIp($ipMax1,$ipMax2,$ipMax3,$ipMax4,$ipMaxima);
+		
+					if(($ip1>=$ipMin1)&&($ip1<=$ipMax1)){
+						if(($ip2>=$ipMin2)&&($ip2<=$ipMax2)){
+							if(($ip3>=$ipMin3)&&($ip3<=$ipMax3)){
+								if(($ip4>=$ipMin4)&&($ip4<=$ipMax4)){
+									$codLaboratorio = $fila["CODLAB"];
+									//$nombreLab = $fila["NOMBREOLD"];
+									$encontrado=true;
+								}
+							}					
+						}	
+					}
+                }
+			}                                 
+       	}
+       	
+       	//Este IF es un caso particular de EPSAlicante
+       	if(!$codLaboratorio){//Error al detectar el laboratorio del USUARIO
+       		echo "<p> Servicio solo disponible desde la Politécnica 1 ";
+       	}
+		
+      $encontrado=false;
+		//Obtener las IPS de los firewalls actuales
+		$sqlRouter="SELECT FIREWALL FROM LABORATORIOS WHERE CODLAB='$codLaboratorio'";
+      $resultRouter=mysql_query($sqlRouter);
+      if (mysql_num_rows($resultRouter)!=0){
+      	$fila = mysql_fetch_array($resultRouter);
+         $router = $fila["FIREWALL"];
+      }
+
+		$eleccionrouter=$router;
+		//Quito el TimeOut de aqui y los reintentos, los tenia asi "1.3.6.1.4.1.52.2501.1.12.4",50,2
+		$a=snmpwalkoid($router,$comunidadsnmp, $oidPrimeraParte.$oidSegundaParte."4"); //XXX "1.3.6.1.4.1.52.2501.1.12.4");
+		$k=0;		
+	 	for(reset($a);$i=key($a);next($a)){//si devuelve true es que la encuentra,        
+	 		if(strstr($a[$i],$codLaboratorio)){
+            		//XXX $oidTerceraParte[$k]=substr($i,42);
+            		$oidTerceraParte[$k]=implode('.', array_slice(explode('.', $i), -8,8)); 
+            		$k++;	
+        	}		
+		}
+			$listaACLService="";
+			//echo "<p> Obtiene la lista de OID de la lista PoolAclServiceTable";
+			$a=snmpwalkoid($router,$comunidadsnmp,$oidPrimeraParte.$oidSegundaParte."7"); //XXX Antes "1.3.6.1.4.1.52.2501.1.12.7");
+        	$kA=0;
+	       	for(reset($a);$i=key($a);next($a)){
+            	//si devuelve true es que la encuentra,
+	       		if(strstr($a[$i],$codLaboratorio."i")){
+                	//$listaACLService[$kA]=substr($i,45);
+                	$listaACLService[$kA]=implode('.', array_slice(explode('.', $i), -5, 5));
+		        	$kA++;//Contiene el número de ocurrencias que hay en la tabla AclServiceTable
+                 }				  
+	       	}
+		//} 
+		?>
+		
+		
+		<h1 class="tituloPrincipal">
+        <?php echo "Laboratorio ". $codLaboratorio . " ";?>
+        </h1>
+		<!--<h2 class="tituloSecundario">-->
+		<h2 class="tituloSecundario">
+		
+        <?php
+        	
+            if($k==0){ ?>
+				<?php
+				echo "No hay restricciones para este laboratorio: ".$codLaboratorio; 
+				if($tipoAcceso=="Profesor"){
+					echo "Póngase en contacto con los técnicos";
+				}else{
+					echo "";
+				}
+			}else{
+				if($tipoAcceso=="Profesor"){ 
+					echo "Hemos detectado que esta en el laboratorio: ".$codLaboratorio." Las restricciones para este laboratorio son:";
+				}else{ 
+					echo "Existen las siguientes restricciones para el laboratorio: ".$codLaboratorio." con el router: ".$eleccionrouter;
+				}
+				echo "";	
+            }
+         echo "</h2>";
+         if($tipoAcceso=="Profesor"){?>
+         	<h4><font color="red">&nbsp&nbsp&nbsp&nbsp No recargue ni cierre la ventana del navegador, si no, perdera su SESIÓN y la CONFIGURACIÓN realizada</font></h4>
+         <?php }
+         
+         include "opcionesdered.phtml";
+		 ?>
+<?php
+	}else{//del if que controla el tipo de accesosi no es profesor y no se ha seleccionado laboratorio.
+		?>
+		<h1 class="tituloPrincipal">
+        <?php echo "Laboratorio ". $codLaboratorio." ";?>
+        </h1>
+		<?php
+		include "eleccionlaboratorio.phtml";
+    	}
+   } 
+}
+
+include ("../includes/pieaccesible.inc")?>
+</body>
+
+</html>
+
+
+

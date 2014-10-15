@@ -1,0 +1,95 @@
+<?PHP
+<?php
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: www 
+ Fichero.....: cambiarACL.phtml
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+$DOCUMENT_ROOT=$_SERVER["SCRIPT_FILENAME"];
+session_start();
+?>
+ <?php
+	   //Cargar variables globales
+	   include("../includes/globales.inc");
+        include_once("../includes/funcionesControlRed.inc");
+        
+        $vFechaSys = date("d/m/Y", getlastmod());
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang=<?php echo obtenerlang($IdiomaEPS)?>>
+<head>
+<script type="text/javascript">
+function salto()
+{
+	location.href="controlred.phtml";
+}
+
+</script>
+<?php include("../includes/meta.inc"); ?>
+
+<?php $zTitle="Control de Red";?>
+<title><?php echo $zTitle?></title>
+<LINK rev=stylesheet href="../includes/estilo.css" type=text/css rel=stylesheet>
+<LINK rev=stylesheet href="../includes/estiloprint.css" type=text/css rel=stylesheet media="print">
+<?php include("../includes/scripts.inc");?>
+</head>
+<body>
+<?php
+   //Conexisn a la BD
+   $db=mysql_connect($gIP, $gUser, $gPassword);
+   if ($db)
+      $res=mysql_select_db($gBaseDatos,$db);
+   if (!$db || !$res)
+      if (!$db)
+         echo "<div class=general><p>ERROR: $php_errormsg</p></div>";
+      else
+         echo "<div class=general><p><big>ERROR: Base de Datos $gBaseDatos inexistente</p></div>";
+   else {
+
+?>
+
+
+<?php
+
+	$numero=0;
+	$numero=$_REQUEST['numeroACL'];
+   	$accion=$_REQUEST['hacer'];
+	if($numero!=0){//DEBEMOS
+		//Debo obtener los identificadores vacíos de descripción.
+		for($i=0;$i<$numero;$i++){
+			$nombreLista="nombreACL".$i;
+			$listas=$_REQUEST[$nombreLista];
+				if ($accion=="Guardar"){
+					$cmdSQL="SELECT ITEM FROM ROUTERACLITEMS WHERE DESCRIPCION='' and NOMBRE='".$listas."'";
+					$result = mysql_query($cmdSQL);
+					if(mysql_num_rows($result)!=0){    
+						while ($fila = mysql_fetch_array($result)) {
+							$item=$fila["ITEM"];
+							$nombreDescrip=$listas.$item;
+							$descripcion=$_REQUEST[$nombreDescrip];
+							$nombreDescrip2="check".$listas.$item;
+							$activo=$_REQUEST[$nombreDescrip2];
+							AnyadirDescripcionACL($listas, $item,$descripcion,$activo);
+						}
+					}
+				}else{
+					if($accion=="Borrar"){
+						BorrarListaACL($listas);
+					}
+				}
+		}
+		
+   	}else{
+		
+	}
+	
+	echo "<SCRIPT>salto()</SCRIPT>";
+   }
+?>
+
+</body>

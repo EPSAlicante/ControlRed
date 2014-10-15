@@ -1,0 +1,44 @@
+<?PHP
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: www
+ Fichero.....: salir.phtml
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+$DOCUMENT_ROOT=$_SERVER["SCRIPT_FILENAME"];
+session_start();
+?>
+	  //Cargar variables globales
+	   include("../includes/globales.inc");
+?>
+
+<head>
+
+</head>
+<body>
+<?php
+	  $_SESSION['nombreLaboratorio']=NULL; 
+	   unset($_SESSION['nombreLaboratorio']);
+	  $_SESSION['cambio']=NULL;
+	   unset($_SESSION['cambio']);
+	$_SESSION['router']=NULL;
+	   unset($_SESSION['router']);
+
+	
+
+
+?>
+<script>
+function salto()
+{
+        location.href="./controlred.phtml";
+}
+
+setTimeout("salto()",1);
+</script>
+</body>

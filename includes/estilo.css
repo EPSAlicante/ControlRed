@@ -1,0 +1,1164 @@
+@charset "iso-8859-1";
+
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: includes
+ Fichero.....: estilos.css 
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+/* Estilos normalizados W3C para la Web de la EPS */
+/*
+{
+-moz-box-sizing: border-box;
+box-sizing: border-box
+}
+*/
+
+p{margin-top:0px;margin-bottom:0em}
+form{margin:0px}
+input{padding:1px}
+
+/*Estilos globales */
+BODY {
+padding-right : 0;
+padding-left : 0;
+padding-bottom : 0;
+padding-top : 0;
+font-size : 0.8em;
+font-family : Arial, Helvetica, sans-serif;
+background-color : #ffffff;
+color : #003366;
+margin-left:10%;
+margin-right:10%;
+margin-top:30px;
+margin-bottom:30px;
+} 
+
+/*Estilos para los frontales */
+UL.frontal {
+padding-right : 0;
+padding-left : 0;
+padding-bottom : 0;
+margin : 0;
+padding-top : 5px;
+list-style-type : none;
+} 
+LI.frontal {
+display : block;
+width : 100%;
+} 
+UL.frontal A {
+padding-right : 0;
+display : block;
+padding-left : 0;
+padding-bottom : 5px;
+width : 100%;
+padding-top : 3px;
+text-align : left;
+color : #003366;
+
+text-decoration : none;
+} 
+UL.frontal A SPAN {
+display : block;
+padding-left : 8px;
+} 
+DIV.frontal {
+clear : both;
+background-color : #ffffff;
+width : 70%;
+height : 115%;
+position : relative;
+top : 0%;
+left : 15%;
+right : 15%;
+} 
+
+/*Bloques y listas en el frontal */
+/* Bloque principal */
+DIV.contenedor {
+position : relative;
+width : 99%;
+height : 74%;
+border-width : 1px;
+border-style : solid;
+} 
+
+/*Lateral izquierdo del frontal (Menu) */
+DIV.menu {
+clear : left;
+float : left;
+width : 25%;
+height : 100%;
+text-align : right;
+background-color : #d8e4e8;
+font-size : 0.85em;
+background-image : url(./controlred/www/imagenes/gplano02.gif);
+background-repeat : repeat;
+} 
+DIV.menusuperior {
+float : left;
+width : 100%;
+text-align : left;
+height : 70px
+} 
+DIV.menusuperior LI {
+display : block;
+width : 100%;
+padding-top : 5px;
+} 
+DIV.menucentral {
+clear : both;
+width : 100%;
+height : 44%;
+text-align : left;
+line-height : 1.25em;
+} 
+DIV.menucentral UL A:hover {
+background-color : #e9e9e9;
+color : #000050;
+background-color : #d7e5ea;
+
+} 
+DIV.menuinferior {
+width : 100%;
+height : 20%;
+text-align : left;
+padding : 0;
+vertical-align : middle;
+} 
+
+/*Zona central (Reloj) */
+DIV.reloj {
+float : left;
+width : 50%;
+height : 100%;
+line-height : 1.25em;
+background-color : #f8f4f8;
+position : relative;
+background-image : url(./controlred/www/imagenes/grp1bis.gif);
+background-repeat : no-repeat;
+background-position : 50% 50%;
+font-size : 0.85em;
+} 
+DIV.reloj p {
+text-align : justify;
+padding : 10px;
+margin-top : 0;
+margin-left : 10px;
+margin-right : 5px;
+margin-bottom : 0;
+} 
+
+DIV.titulaciones {
+width : 100%;
+text-align : center;
+vertical-align : middle;
+background-color : #ffffff;
+height : 70px;
+background-image : url(./controlred/www/imagenes/gpuntoazul.gif);
+background-repeat : repeat-y;
+background-position : 0% 50%;
+} 
+DIV.titulaciones p {
+text-align : center;
+margin : 0;
+padding : 0;
+} 
+
+DIV.actividades {
+width : 99%;
+text-align : center;
+vertical-align : middle;
+background-color : #ffffff;
+height : 70px;
+font-size : 0.85em;
+} 
+DIV.actividades p {
+margin : 0;
+padding : 0;
+} 
+
+
+.rotuloreloj {
+display : block;
+text-indent : 7px;
+font-weight : bold;
+margin-bottom : 2px;
+padding-bottom : 2px;
+width : 100%;
+padding-top : 3px;
+font-family : Arial, Helvetica, sans-serif;
+background-image : url(./controlred/www/imagenes/gfondos/cabGris.gif);
+color : #ffffff;
+background-color : #7f7f7f;
+font-weight : bold;
+background-repeat : repeat-x;
+height : 21px;
+} 
+
+/*Zona lateral derecha (noticias) */
+DIV.noticias {
+width : 100%;
+height : 60%;
+text-align : center;
+vertical-align : middle;
+font-size : 0.85em;
+} 
+UL.noticias {
+padding-right : 5px;
+padding-left : 5px;
+padding-bottom : 0;
+margin : 0;
+padding-top : 5px;
+list-style-type : none;
+} 
+LI.noticias {
+display : block;
+width : 100%;
+} 
+UL.noticias A {
+padding-right : 0;
+display : block;
+padding-left : 0;
+padding-bottom : 5px;
+width : 100%;
+padding-top : 3px;
+text-align : left;
+color : #003366;
+text-decoration : none;
+} 
+UL.noticias A SPAN {
+display : block;
+padding-left : 8px;
+} 
+DIV.noticiasservicios {
+clear : right;
+float : left;
+width : 25%;
+text-align : center;
+height : 100%;
+position : relative;
+line-height : 1.25em;
+background-image : url(./controlred/www/imagenes/gpuntoazul.gif);
+background-repeat : repeat-y;
+background-position : 0% 50%;
+} 
+DIV.noticiasservicios UL A SPAN {
+display : block;
+padding-left : 0;
+text-align : center;
+} 
+DIV.servicios {
+width : 100%;
+text-align : center;
+vertical-align : bottom;
+line-height : 1.25em;
+font-size : 0.85em;
+margin : 0em;
+padding : 0;
+} 
+div.servicios A {
+color : #003366;
+text-decoration : none;
+} 
+
+/*Cabeceras frontal*/
+DIV.tituloEPS {
+clear : both;
+background-color : #ffffff;
+width : 100%;
+height : 11%;
+position : relative;
+top : 0%;
+} 
+DIV.tituloTitulacion {
+clear : both;
+background-color : #ffffff;
+width : 100%;
+height : 10%;
+position : relative;
+top : -2%;
+} 
+
+/* Pie del fontal */
+DIV.banderas {
+clear : left;
+float : left;
+width : 25%;
+height : 15%;
+text-align : center;
+padding-top : 1em;
+position : relative;
+} 
+DIV.direccionEPS {
+float : left;
+vertical-align : top;
+width : 50%;
+height : 15%;
+text-align : center;
+position : relative;
+} 
+DIV.email {
+clear : right;
+float : left;
+width : 25%;
+text-align : center;
+height : 15%;
+position : relative;
+} 
+
+
+/* Estlios específicos por componete */
+.rotulo1 {
+display : block;
+text-indent : 7px;
+font-weight : bold;
+margin-bottom : 2px;
+padding-bottom : 2px;
+width : 100%;
+color : #ffffff;
+padding-top : 3px;
+font-family : Arial, Helvetica, sans-serif;
+background-color : #003060;
+background-image : url(./controlred/www/imagenes/gfondos/cabecera1.gif);
+background-color : #000050;
+font-weight : bold;
+background-repeat : repeat-x;
+height : 21px;
+} 
+.rotulo1 A {
+color : #ffffff;
+text-decoration : none;
+} 
+
+H1.titulofrontal {
+padding-right : 0;
+display : inline;
+padding-left : 0;
+padding-bottom : 0;
+margin : 0;
+padding-top : 0;
+font-size : 1.1em;
+}
+ 
+SPAN.noenlace {
+padding-right : 0;
+display : block;
+padding-left : 0;
+padding-bottom : 5px;
+width : 100%;
+padding-top : 3px;
+text-align : left;
+color : #003366;
+text-decoration : none;
+} 
+SPAN.noenlace {
+display : block;
+padding-left : 8px;
+} 
+LI.frontal A:hover {
+color : #993300;
+} 
+UL.frontal A:visited {
+color : #003366;
+text-decoration : none;
+} 
+A.frontal {
+color : #003366;
+text-decoration : underline;
+} 
+A.frontal:hover {
+color : #003366;
+text-decoration : underline;
+} 
+H1 A.frontal {
+color : #ffffff;
+text-decoration : underline;
+} 
+H1 A.frontal:hover {
+color : #ffffff;
+text-decoration : underline;
+} 
+H2 A.frontal {
+color : #ffffff;
+text-decoration : underline;
+} 
+H2 A.frontal:hover {
+color : #ffffff;
+text-decoration : underline;
+} 
+IMG.left {
+clear : left;
+float : left;
+margin : 0;
+border:0;
+} 
+IMG.right {
+clear : right;
+float : right;
+margin : 0;
+border:0;
+} 
+IMG.bandera {
+width :24px;
+height : 24px;
+vertical-align : middle;
+}
+HR {
+text-align : center;
+width : 80%;
+color : #cccccc;
+height : 1px;
+} 
+
+/* Definición de bloques de página */
+/* Contenedores principales*/
+DIV.general {
+clear : both;
+background-color : #ffffff;
+background-color : #f8f4f8;
+
+width : 100%;
+
+position : relative;
+top : 0%;
+} 
+DIV.cabecera {
+clear : both;
+background-color : #ffffff;
+width : 100%;
+height : 3em;
+position : relative;
+top : 0%;
+} 
+DIV.cabeceratituloeps {
+clear : both;
+background-color : #ffffff;
+width : 100%;
+height : 3em;
+position : relative;
+top : 0%;
+text-align : right;
+}
+
+DIV.Contenido {
+padding-left : 20px;
+background : #f8f4f8;
+} 
+
+/* Definición de estilo de cabeceras de página */
+H1.tituloPrincipal {
+clear : both;
+color : #ffffff;
+font-size : 1.3em;
+font-weight : bold;
+
+position : relative;
+top : 0%;
+vertical-align : middle;
+margin-bottom : 0;
+background-color : #003366;
+background-image : url("./controlred/www/imagenes/gfondos/cabecera1.gif");
+background-repeat : repeat-x;
+margin-top:1em;
+margin-top:0px;
+text-align : justify;
+padding-top: 0.5em;
+padding-bottom: 0.5em;
+padding-left : 15px;
+padding-right : 0.75em;
+
+} 
+
+H1.tituloPrincipal p {
+text-align : justify;
+padding : 0%;
+margin : 0%;
+}
+
+H2.tituloSecundario {
+clear : both;
+color : #f5f5f5;
+font-weight : bold;
+font-size : 1em;
+
+position : relative;
+top : 0%;
+vertical-align : middle;
+margin-top : 2em;
+margin-bottom : 0;
+background-color : #5B5A5A;
+background-image : url("./controlred/www/imagenes/gfondos/cabGris.gif");
+background-repeat : repeat-x;
+text-align : justify;
+padding-left : 0.75em;
+padding-right : 0.75em;
+padding-top: 0.5em;
+padding-bottom: 0.5em;
+
+}
+ 
+H2.tituloSecundario p {
+text-align : justify;
+padding : 0%;
+margin : 0%;
+} 
+
+H3.tituloTercero {
+background-color : #f8f4f8;
+color : #003366;
+font-weight : bold;
+font-size : 1em;
+
+position : relative;
+margin-top : 0;
+margin-bottom : 0;
+text-align : justify;
+padding : 1%;
+margin-top : 0;
+margin-bottom : 0;
+margin-right : 0;
+padding-left : 1.25em;
+} 
+H3.tituloTercero p {
+text-align : justify;
+padding : 0%;
+margin-top : 0;
+margin-bottom : 0;
+margin-right : 0;
+margin-left : 0px;
+} 
+
+H3.tituloTercero A {
+color : #003366;
+text-decoration : underline;
+} 
+H3.tituloTercero A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+H4.tituloCuarto {
+background-color : #cccccc;
+color : #003366;
+font-weight : bold;
+font-size : 1em;
+
+position : relative;
+margin-top : 0;
+margin-bottom : 0;
+text-align : justify;
+padding-left : 1.25em;
+padding-right : 0.75em;
+padding-top: 0.5em;
+padding-bottom: 0.5em;
+margin-right : 0;
+
+} 
+H4.tituloCuarto p {
+text-align : justify;
+padding : 0%;
+margin-top : 0;
+margin-bottom : 0;
+margin-right : 0;
+margin-left : 0px;
+} 
+
+H4.tituloCuarto A {
+color : #003366;
+text-decoration : underline;
+} 
+H4.tituloCuarto A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+
+/* Estilos de página para contenidos*/
+DIV.texto {
+background-color : #f8f4f8;
+
+color : #003366;
+font-size : 1em;
+
+position : relative;
+padding-left : 60px;
+padding-right:60px;
+padding-top:15px;
+padding-bottom:0px;
+} 
+DIV.texto p {
+text-align : justify;
+margin-top : 0;
+margin-bottom : 0;
+padding-top:10px;
+padding-bottom:10px;
+} 
+
+div.texto A {
+color : #003366;
+text-decoration : underline;
+} 
+div.texto A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+DIV.textolista {
+text-align : justify;
+padding-right : 50px;
+background-color : #f8f4f8;
+} 
+DIV.textolista UL {
+margin-left : 20px;
+margin-bottom : 0;
+margin-top : 0;
+padding : 10px;
+padding-bottom:5px;
+font-size : 1em;
+} 
+DIV.textolista OL {
+margin-left : 20px;
+margin-bottom : 0;
+margin-top : 0;
+padding : 10px;
+padding-bottom:0px;
+font-size : 1em;
+} 
+DIV.textolista UL LI.nivel1 {
+margin-left : 50px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+DIV.textolista UL LI.nivel2 {
+margin-left : 90px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+DIV.textolista UL LI.nivel3 {
+margin-left : 130px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+DIV.textolista UL LI.nivel4 {
+margin-left : 170px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+DIV.textolista UL LI.nivel5 {
+margin-left : 210px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+
+DIV.textolista UL LI.nivel6 {
+margin-left : 250px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+DIV.textolista UL LI.nivel7 {
+margin-left : 280px;
+list-style-type : square;
+margin-bottom : 10px;
+} 
+
+
+DIV.textolista OL LI.nivel1 {
+margin-left : 50px;
+margin-bottom : 10px;
+} 
+DIV.textolista OL LI.nivel2 {
+margin-left : 90px;
+margin-bottom : 10px;
+} 
+DIV.textolista OL LI.nivel3 {
+margin-left : 130px;
+margin-bottom : 10px;
+} 
+DIV.textolista OL LI.nivel4 {
+margin-left : 170px;
+margin-bottom : 10px;
+} 
+DIV.textolista OL LI.nivel5 {
+margin-left : 210px;
+margin-bottom : 10px;
+} 
+
+DIV.textolista OL LI.nivel6 {
+margin-left : 250px;
+margin-bottom : 10px;
+} 
+
+DIV.textolista UL A {
+color : #003366;
+} 
+DIV.textolista OL A {
+color : #003366;
+} 
+
+DIV.textomenu {
+background-color : #f8f4f8;
+color : #003366;
+font-size : 1em;
+width : 100%;
+position : relative;
+padding-bottom : 10px;
+padding-top : 10px;
+} 
+DIV.textomenu p {
+text-align : justify;
+padding : 10px;
+margin-top : 0;
+margin-left : 50px;
+margin-right : 50px;
+margin-bottom : 0;
+line-height : 4px;
+} 
+div.textomenu A {
+color : #003366;
+text-decoration : underline;
+} 
+div.textomenu A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+DIV.textoblanco {
+background-color : #ffffff;
+color : #003366;
+font-size : 1em;
+width : 100%;
+position : relative;
+border:1px solid #ffffff;
+
+} 
+DIV.textoblanco p {
+text-align : justify;
+padding-top : 10px;
+padding-bottom : 10px;
+margin-top : 0;
+margin-left : 0;
+margin-right : 0;
+margin-bottom : 0;
+} 
+div.textoblanco A {
+color : #003366;
+text-decoration : underline;
+} 
+div.textoblanco A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+DIV.textoblanco ol {
+margin-top : 0;
+} 
+DIV.textoblanco LI.nivel1 {
+margin-left : 10px;
+text-align : justify;
+margin-top : 0;
+} 
+DIV.textoblanco LI.nivel2 {
+margin-left : 50px;
+text-align : justify;
+margin-top : 0;
+} 
+DIV.pie {
+clear : both;
+background-color : #f8f4f8;
+color : #003366;
+font-size : 0.8em;
+width : 100%;
+border-top: 20px solid #ffffff;
+} 
+DIV.pietexto {
+clear : left;
+float : left;
+background-color : #f8f4f8;
+color : #003366;
+width : 75%;
+position : relative;
+} 
+DIV.pieimagenes {
+clear : right;
+float : right;
+background-color : #f8f4f8;
+color : #003366;
+width : 25%;
+position : relative;
+text-align : right;
+}
+DIV.textoDestacado {
+background-color : #CCCCCC;
+color : #003366;
+font-weight :normal;
+font-size :1em;
+width: 100%;
+position:relative; 
+margin-top:0px;
+}
+DIV.textoDestacado  p {
+text-align :justify;
+padding :1%;
+margin-top:0px;
+margin-bottom:0px;
+margin-right:0px;
+margin-left:10px;
+}
+div.textoDestacado  A {
+color :#003366;
+text-decoration :underline;
+}
+div.textoDestacado  A:hover {
+color :#003366;
+text-decoration:underline;
+}
+
+/* Tablas de contenidos*/
+TABLE.principal {
+width : 100%;
+color : #003366;
+font-size : 1em;
+line-height : 2em;
+} 
+TABLE.principal caption {
+color : #ffffff;
+font-weight : bold;
+text-align : center;
+padding : 0.5%;
+font-size : 1.25em;
+width : 100%;
+background-image : url("./controlred/www/imagenes/gfondos/cabecera1.gif");
+color : #ffffff;
+background-color : #003366;
+font-weight : bold;
+background-repeat : repeat-x;
+} 
+TABLE.principal TH {
+background-color : #c8ccc8;
+color : #003366;
+padding : 0.75%;
+margin : 0%;
+background-image : url("./controlred/www/imagenes/gfondos/cabGris.gif");
+color : #ffffff;
+background-color : #7f7f7f;
+font-weight : bold;
+background-repeat : repeat-x;
+} 
+TABLE.principal TD {
+background-color : #f5f5f5;
+padding : 2%;
+margin : 2%;
+line-height : 1.25em;
+} 
+TABLE.principal A {
+color : #003366;
+text-decoration : underline;
+} 
+TABLE.principal A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+TABLE.secundaria {
+width : 100%;
+font-size : 1em;
+} 
+TABLE.secundaria caption {
+font-weight : bold;
+text-align : center;
+width : 100%;
+font-size : 1em;
+} 
+TABLE.secundaria TH {
+background-color : #c8ccc8;
+color : #003366;
+margin : 0%;
+font-weight : bold;
+} 
+TABLE.secundaria TD {
+background-color : #f5f5f5;
+line-height : 25px;
+vertical-align : top;
+} 
+TABLE.secundaria A {
+color : #003366;
+text-decoration : underline;
+} 
+TABLE.secundaria A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+
+/* Fichas (variación tablas) */
+
+/* tabular1 se utiliza cuando hay que formatear los datos en pantalla y la primera columna utiliza el 25% de la pantalla*/ 
+div.tabular1izquierda {
+clear : left;
+float : left;
+width : 25%;
+position : relative;
+text-align : left;
+
+padding-left : 30px;
+padding-top : 0px;
+padding-bottom : 5px;
+
+/*
+padding : 10px;
+margin-top : 0;
+margin-left : 20px;
+margin-right : 20px;
+margin-bottom : 0;
+*/
+/*border-width : 1px;
+border-style : solid;
+*/
+} 
+div.tabular1derecha {
+clear : right;
+float : left;
+width : 70%;
+text-align : left;
+
+padding-left : 0px;
+padding-top : 0px;
+padding-bottom : 5px;
+
+
+} 
+DIV.tabular {
+background-color : #f8f4f8;
+padding : 10px;
+margin-top : 0;
+padding-left : 60px;
+
+margin-bottom : 0;
+} 
+
+
+div.tabular2izquierda {
+width: 10%; float: left;
+}
+div.tabular2derecha {
+width: 85%;
+
+}
+
+/* Estos dos divs que siguen se han usado para las paginas de los planos de la EPS */
+div.tabularizquierda {
+clear : left;
+float : left;
+width : 50%;
+position : relative;
+text-align : left;
+padding-left : 30px;
+padding-top : 0px;
+padding-bottom : 5px;
+}
+ 
+div.tabularderecha {
+clear : right;
+float : left;
+width : 50%;
+text-align : left;
+padding-left : 0px;
+padding-top : 0px;
+padding-bottom : 5px;
+} 
+form.form label {    
+margin-bottom: -1em; 
+/*border:1px solid red;*/ 
+} 
+
+form.form div.form { 
+/*display: block;*/     
+position:relative;     
+left: 10em;     
+bottom: 1.5em; 
+/*border:1px solid blue;*/ 
+width:75%;
+} 
+
+div.grupo {
+width : 100%;
+
+border-width : 1px;
+border-style : groove;
+/*border-style : ridge;*/
+} 
+
+
+TABLE.ficha {
+width : 100%;
+font-size : 0.8em;
+} 
+TABLE.ficha TD.td1 {
+background-color : #f5f5f5;
+text-align : justify;
+font-weight : bold;
+padding : 10px;
+vertical-align : top;
+} 
+TABLE.ficha TD.td2 {
+background-color : #f5f5f5;
+text-align : justify;
+padding : 10px;
+} 
+TABLE.ficha A {
+color : #003366;
+text-decoration : underline;
+} 
+TABLE.ficha A:hover {
+color : #003366;
+text-decoration : underline;
+} 
+
+
+/* Tipos de letra (Se estan duplicando para eliminar los #XXX)*/
+/* ¡¡¡ Eliminar los #XXX una vez revisados los PHTML !!! */
+#n {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1em;
+font-weight : normal;
+color : #003366;
+} 
+.n {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1em;
+font-weight : normal;
+color : #003366;
+} 
+#nn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1em;
+font-weight : bold;
+color : #003366;
+} 
+.nn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1em;
+font-weight : bold;
+color : #003366;
+} 
+#gn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.2em;
+font-weight : bold;
+color : #003366;
+} 
+.gn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.2em;
+font-weight : bold;
+color : #003366;
+} 
+#g {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.2em;
+color : #003366;
+} 
+.g {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.2em;
+color : #003366;
+} 
+#sg {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.3em;
+color : #003366;
+} 
+.sg {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.3em;
+color : #003366;
+} 
+#sgn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.3em;
+color : #003366;
+font-weight : bold;
+} 
+.sgn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 1.3em;
+color : #003366;
+font-weight : bold;
+} 
+#m {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.9em;
+font-weight : normal;
+color : #003366;
+} 
+.m {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.9em;
+font-weight : normal;
+color : #003366;
+} 
+#p {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #003366;
+} 
+.p {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #003366;
+}
+#pr {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #cc0033;
+} 
+.pr {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #cc0033;
+}
+#pv {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #009900;
+} 
+.pv {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #009900;
+} 
+.pn {
+font-family : Arial, Helvetica, sans-serif;
+font-size : 0.8em;
+font-weight : normal;
+color : #FF6633;
+} 
+
+/* Agrupaciones formulario */
+FIELDSET.Grupos p {
+margin : 0;
+padding : 0;
+padding-left : 25px;
+} 
+LABEL.Campos {
+width : 100%;
+text-align : left;
+margin : 0;
+padding : 0;
+background : #f8f4f8;
+} 
+LABEL.Campos p {
+width : 70%;
+float : right;
+text-align : left;
+border : 0;
+margin : 0;
+padding : 0;
+background : #f8f4f8;
+} 

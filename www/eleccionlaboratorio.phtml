@@ -1,0 +1,253 @@
+<?PHP
+/*
+ ESCUELA POLITECNICA SUPERIOR DE ALICANTE
+
+ Proyecto....: Control de Red
+ Directorio..: www
+ Fichero.....: eleccionlaboratorio.phtml
+ Codificación: UTF-8
+ Fecha.......: 17-nov-2009 10:18:48
+ Descripción.: Estado aplicación
+*/
+
+$DOCUMENT_ROOT=$_SERVER["SCRIPT_FILENAME"];
+
+?>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang=<?php echo obtenerlang($IdiomaEPS)?>>
+
+<head>
+<?php include("../includes/meta.inc"); ?>
+
+<?php $zTitle="Control de Red";?>
+<title><?php echo $zTitle?></title>
+<LINK rev=stylesheet href="../includes/estilo.css" type=text/css rel=stylesheet>
+<LINK rev=stylesheet href="../includes/estiloprint.css" type=text/css rel=stylesheet media="print">
+<?php include("../includes/scripts.inc");?>
+<style type="text/css">
+td{
+	text-align: center;
+}
+
+
+</style>
+<style type="text/css">
+#flotante
+{
+	position: absolute;
+	display: none;
+	font-family: Arial;
+	font-size: 1em;
+	font-style: italic;
+	border: 2px solid #808080;
+	background-color: white;
+	padding: 2%;
+	position: absolute;
+    left: 50%;
+	top: 100%;
+	height: 100px;
+	margin-top: -50px;    
+   	width: 300px;
+    margin-left: -150px;    
+	
+}
+</style>
+</head>
+<body onbeforeunload="showdiv()">
+
+<!--DECLARACION VARIABLES PROPIA-->
+<?php $tipoAcceso="No definido";?>
+		<div class="texto">
+		<br/>
+		<p>La informaci&oacute;n sobre las restricciones aplicadas a cada laboratorio <b>es solo orientativa</b>, los cambios aplicados 
+				directamente sobre el router no se reflejarán hasta que se aplique de nuevo una configuraci&oacute;n para el laboratorio.</p>
+				
+				<p>Para ver informaci&oacute;n mas detallada, aplicar restricciones o clasificar nuevas ACL introducidas en el router, selecciona el laboratorio sobre el que se va a trabajar.</p>
+       </div>
+        <h2 class="tituloSecundario">
+   		<?php echo "Lista de laboratorios de la eps";?>
+        </h2>
+		
+		<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<br>
+		<?php
+			//Conexisn a la BD
+   			$db=mysql_connect($gIP, $gUser, $gPassword);
+   			if ($db)
+      				$res=mysql_select_db($gBaseDatos,$db);
+   			if (!$db || !$res){
+      				if (!$db)
+         				echo "<div class=general><p>ERROR: $php_errormsg</p></div>";
+      				else
+         				echo "<div class=general><p><big>ERROR: Base de Datos $gBaseDatos inexistente</p></div>";
+   			}else{
+				$sql = "SELECT IP,NOMBREOLD,CODLAB FROM LABORATORIOS"; // XXX  WHERE CODEDI=16";
+            	$result = mysql_query($sql);
+				$contadorColumnas=0;
+				$cont=0;
+				echo "<div class=\"texto\">";
+				
+				
+				
+				
+				echo "<table border=\"1\" align=\"center\">";
+               	if (mysql_num_rows($result)!=0){
+               		echo "<tr>";
+                	while ($fila = mysql_fetch_array($result)) {
+						$ip = $fila["IP"];
+                        $nombre = $fila["NOMBREOLD"];
+                        $codlab=$fila["CODLAB"];
+                        
+                        $sql3="SELECT NOMBRE FROM LABORATORIOSTR WHERE CODLAB=\"".$codlab."\" AND idioma=\"cas\"";
+                       	$result3=mysql_query($sql3);
+                       	if(mysql_num_rows($result3)!=0){
+                       		while($fila3=mysql_fetch_array($result3)){
+                       			$nombre=$fila3["NOMBRE"];
+                       		}
+                       	}
+                        
+                        if($cont==4){
+                         echo "<tr>";
+                        }
+                        
+                        $cmdSQL2="SELECT DISTINCT(OPCIONACTIVA) FROM ROUTERACLITEMS WHERE NOMBRE LIKE \"".$codlab."%\"";
+                       
+                        $result2=mysql_query($cmdSQL2);
+                        echo "<td>";
+
+                        if(mysql_num_rows($result2)==0){
+                        	echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/noSelecc1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        }else{
+                       		
+                        	while($fila2=mysql_fetch_array($result2)){
+                        		$selec=0;
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="PorDefecto"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/defecto.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="eps"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/eps1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="login"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/login1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="dlsi"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/dlsi1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="ua"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/ua1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="cv"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/cv1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($fila2["OPCIONACTIVA"]=="moodleUA"){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/moodleUA1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        			$selec=1;
+                        		}
+                        		
+                        		if($selec==0){
+                        			echo "<table align=\"center\" ><tr><td><img src=\"./imagenes/noSelecc1.png\"></td></tr><tr><td><a href=\"controlred.phtml?nombre=".$nombre."&router=2\"><font face=\"Arial\" size=\"2\">".$nombre."</font></a></td></table>";
+                        		}
+                        		
+
+                        	}
+                        }
+                        	echo "</td>";
+                			if(($cont+1)==4){
+                         		echo "</tr>";
+                       	 		$cont=0;
+                			}else{
+                				$cont++;
+                			}
+                       	 	
+               
+             		}
+             	
+             		if($cont+1!=4){
+            			echo "</tr>"; 	
+             		}         
+             		
+			}
+        }
+  //del while?>
+  			</table>
+		
+		<br>
+		<br>
+		<h2 class="tituloSecundario">Leyenda: </h2>
+		<table>
+		<tr>
+		<td><img src="./imagenes/noSelecc1.png"></td>
+		<td>Nunca se ha seleccionado una configuración para este laboratorio o ha sido borrado de la base de datos</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/defecto.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n por defecto</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/ua1.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n de acceso solo a la UA</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/eps1.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n de acceso solo a la EPS</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/cv1.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n de acceso solo al CV</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/dlsi1.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n de acceso solo a los servidores de practicas del DLSI</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/login1.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n de login, solo permite identificarse a los usuarios</td>
+		</tr>
+		
+		<tr>
+		<td><img src="./imagenes/moodleUA1.png"></td>
+		<td>El laboratorio tiene aplicada la configuraci&oacute;n de acceso al moodle de la UA</td>
+		</tr>
+		
+		</table>
+		</div>
+		
+		<div  id="flotante">
+		<br>
+		<p align="center">Se esta comprobando la configuraci&oacute;n del laboratorio en el router, esta operaci&oacute;n puede llevar unos segundos</p>
+		<div align="center"><img src="./imagenes/barraProgreso.gif" ></div>
+		<br>
+		</div>
+
+		<script type="text/javascript">
+		function showdiv()
+		{
+			document.getElementById('flotante').style.display='block';
+			return;
+		}
+	</script>
+		
+</body>
+</html>
+
+
+
